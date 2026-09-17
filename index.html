@@ -486,15 +486,9 @@
     </div>
 <script>
 function openLogin() {
-    const username = prompt("Nhập tên tài khoản:");
-    if (!username) return;
-
-    const password = prompt("Nhập mật khẩu:");
-    if (!password) return;
-localStorage.setItem("loggedIn", "true");
-localStorage.setItem("username", username);
-    alert("Đăng nhập thành công! Xin chào " + username);
-}function updateLoginStatus() {
+    window.location.href = "login.html";
+}
+    function updateLoginStatus() {
     const loggedIn = localStorage.getItem("loggedIn");
     const username = localStorage.getItem("username");
     const userBox = document.getElementById("userBox");
