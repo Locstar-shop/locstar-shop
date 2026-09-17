@@ -87,7 +87,8 @@ app.post(
     type: "application/json"
   }),
   async (req, res) => {
-
+console.log("=== SEPAY WEBHOOK RECEIVED ===");
+console.log("BODY:", req.body);
     try {
 
       if (!SEPAY_WEBHOOK_SECRET) {
