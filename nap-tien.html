@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Nạp tiền - LOC STAR</title>
 
 <style>
+
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -72,6 +74,88 @@ h1 {
     color: #2878e8;
     text-decoration: none;
 }
+
+.info-box {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f1f3f8;
+    border-radius: 10px;
+}
+
+.info-row {
+    margin: 14px 0;
+}
+
+.code-box {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 20px;
+    color: #2878e8;
+    word-break: break-all;
+}
+
+.qr {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.qr img {
+    width: 300px;
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+.copy-buttons {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.copy-btn {
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    margin: 5px;
+    font-size: 15px;
+}
+
+.bank-btn {
+    background: #4285f4;
+}
+
+.content-btn {
+    background: #20bf55;
+}
+
+.confirm-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    background: #22c55e;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.confirm-btn:hover {
+    background: #16a34a;
+}
+
+.loading {
+    text-align: center;
+    color: #666;
+}
+
+.error {
+    text-align: center;
+    color: red;
+}
+
 </style>
 </head>
 
@@ -87,199 +171,453 @@ h1 {
 
     <div class="balance">
         Số dư hiện tại:
-        <b id="balance">0đ</b>
+        <b id="balance">Đang tải...</b>
     </div>
 
-    <h3>Chọn số tiền muốn nạp</h3>
-
-    <div class="amounts">
-
-    <button class="amount" onclick="chonTien(10000)">
-        10.000đ
-    </button>
-
-    <button class="amount" onclick="chonTien(20000)">
-        20.000đ
-    </button>
-
-    <button class="amount" onclick="chonTien(50000)">
-        50.000đ
-    </button>
-
-    <button class="amount" onclick="chonTien(100000)">
-        100.000đ
-    </button>
-
-    <button class="amount" onclick="chonTien(200000)">
-        200.000đ
-    </button>
-
-    <button class="amount" onclick="chonTien(500000)">
-        500.000đ
-    </button>
-
-</div>
-
-<div id="payment" style="display:none; margin-top:30px; padding:20px; background:#f1f3f8; border-radius:10px;">
-
-    <h2 style="color:#34265f; text-align:center;">
-        Thông tin chuyển khoản
-    </h2>
-
-    <p>
-        <b>Ngân hàng:</b> Vietcombank
-    </p>
-
-    <p>
-        <b>Số tài khoản:</b>
-        <span id="bankNumber">9369549277</span>
-    </p>
-
-    <p>
-        <b>Chủ tài khoản:</b> NGUYEN TAN LOC
-    </p>
-
-    <p>
-        <b>Số tiền:</b>
-        <span id="paymentAmount">0đ</span>
-    </p>
-
-    <p>
-        <b>Nội dung chuyển khoản:</b>
-    </p>
-
-    <div style="background:white; padding:15px; border-radius:8px; text-align:center;">
-        <b id="transferCode">NAPTIEN</b>
+    <div id="accountStatus" class="loading">
+        Đang tải thông tin tài khoản...
     </div>
-<div style="text-align:center; margin:20px 0;">
 
-    <h3 style="color:#34265f;">
-        📱 Quét QR để chuyển khoản
-    </h3>
+    <div id="mainContent" style="display:none;">
 
-    <img id="vietqr"
-         src="https://img.vietqr.io/image/VCB-9369549277-compact2.jpg"
-         alt="QR Vietcombank"
-         style="width:300px; max-width:100%; border-radius:10px;">
+        <h3>Chọn số tiền muốn nạp</h3>
 
-    <br><br>
+        <div class="amounts">
 
-    <button onclick="copyBankNumber()"
-            style="background:#4285f4; color:white; border:0; padding:12px 20px; border-radius:8px; cursor:pointer;">
-        📋 Sao chép số tài khoản
-    </button>
+            <button class="amount" onclick="chonTien(10000)">
+                10.000đ
+            </button>
 
-    <button onclick="copyTransferContent()"
-            style="background:#20bf55; color:white; border:0; padding:12px 20px; border-radius:8px; cursor:pointer;">
-        📋 Sao chép nội dung
-    </button>
+            <button class="amount" onclick="chonTien(20000)">
+                20.000đ
+            </button>
 
-</div>
-    <button onclick="xacNhanNap()" style="
-        width:100%;
-        margin-top:20px;
-        padding:15px;
-        border:none;
-        border-radius:8px;
-        background:#22c55e;
-        color:white;
-        font-size:16px;
-        cursor:pointer;
-    ">
-        Tôi đã chuyển khoản
-    </button>
+            <button class="amount" onclick="chonTien(50000)">
+                50.000đ
+            </button>
 
-</div>
+            <button class="amount" onclick="chonTien(100000)">
+                100.000đ
+            </button>
+
+            <button class="amount" onclick="chonTien(200000)">
+                200.000đ
+            </button>
+
+            <button class="amount" onclick="chonTien(500000)">
+                500.000đ
+            </button>
+
+        </div>
+
+
+        <div id="payment"
+             class="info-box"
+             style="display:none;">
+
+            <h2 style="color:#34265f; text-align:center;">
+                Thông tin chuyển khoản
+            </h2>
+
+
+            <div class="info-row">
+                <b>Ngân hàng:</b>
+                <span id="bankName">Vietcombank</span>
+            </div>
+
+
+            <div class="info-row">
+                <b>Số tài khoản:</b>
+                <span id="bankNumber">9369549277</span>
+            </div>
+
+
+            <div class="info-row">
+                <b>Chủ tài khoản:</b>
+                <span id="bankOwner">NGUYEN TAN LOC</span>
+            </div>
+
+
+            <div class="info-row">
+                <b>Số tiền:</b>
+                <span id="paymentAmount">0đ</span>
+            </div>
+
+
+            <div class="info-row">
+
+                <b>Nội dung chuyển khoản:</b>
+
+                <div class="code-box">
+                    <span id="transferCode">---</span>
+                </div>
+
+            </div>
+
+
+            <div class="qr">
+
+                <h3 style="color:#34265f;">
+                    📱 Quét QR để chuyển khoản
+                </h3>
+
+                <img
+                    id="vietqr"
+                    src=""
+                    alt="QR Vietcombank"
+                >
+
+            </div>
+
+
+            <div class="copy-buttons">
+
+                <button
+                    class="copy-btn bank-btn"
+                    onclick="copyBankNumber()">
+
+                    📋 Sao chép số tài khoản
+
+                </button>
+
+
+                <button
+                    class="copy-btn content-btn"
+                    onclick="copyTransferContent()">
+
+                    📋 Sao chép nội dung
+
+                </button>
+
+            </div>
+
+
+            <button
+                class="confirm-btn"
+                onclick="xacNhanNap()">
+
+                Tôi đã chuyển khoản
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <a
+        href="index.html"
+        class="back">
+
         ← Quay lại trang chủ
+
     </a>
 
 </div>
 
+
 <script>
 
-let balance = Number(localStorage.getItem("balance")) || 0;
+const API_URL =
+    "https://locstar-shop-api.onrender.com";
 
-document.getElementById("balance").textContent =
-    balance.toLocaleString("vi-VN") + "đ";
+const token =
+    localStorage.getItem("authToken");
+
 
 let selectedAmount = 0;
 
+let depositCode = "";
+
+let bankNumber =
+    "9369549277";
+
+let bankName =
+    "Vietcombank";
+
+let bankOwner =
+    "NGUYEN TAN LOC";
+
+
+// ========================================
+// KIỂM TRA ĐĂNG NHẬP
+// ========================================
+
+if (!token) {
+
+    alert(
+        "Bạn cần đăng nhập để nạp tiền!"
+    );
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+// ========================================
+// TẢI THÔNG TIN TÀI KHOẢN
+// ========================================
+
+async function loadAccount() {
+
+    try {
+
+        const response =
+            await fetch(
+                API_URL + "/api/account/me",
+                {
+                    method: "GET",
+
+                    headers: {
+                        "Authorization":
+                            "Bearer " + token
+                    }
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok || !data.success) {
+
+            throw new Error(
+                data.message ||
+                "Không thể lấy thông tin tài khoản"
+            );
+
+        }
+
+
+        const user =
+            data.user;
+
+
+        // Số dư thật từ server
+
+        document.getElementById(
+            "balance"
+        ).textContent =
+            Number(
+                user.balance || 0
+            ).toLocaleString("vi-VN")
+            + "đ";
+
+
+        // Mã nạp tiền thật
+
+        depositCode =
+            user.depositCode;
+
+
+        document.getElementById(
+            "accountStatus"
+        ).innerHTML =
+            "Xin chào <b>" +
+            user.username +
+            "</b>";
+
+
+        document.getElementById(
+            "mainContent"
+        ).style.display =
+            "block";
+
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        document.getElementById(
+            "accountStatus"
+        ).innerHTML =
+            '<div class="error">' +
+            error.message +
+            "</div>";
+
+
+        // Token hết hạn
+
+        if (
+            error.message.includes(
+                "đăng nhập"
+            )
+        ) {
+
+            localStorage.removeItem(
+                "authToken"
+            );
+
+            localStorage.removeItem(
+                "loggedIn"
+            );
+
+            window.location.href =
+                "login.html";
+
+        }
+
+    }
+
+}
+
+
+// ========================================
+// CHỌN SỐ TIỀN
+// ========================================
+
 function chonTien(amount) {
 
-    selectedAmount = amount;
+    if (!depositCode) {
 
-    document.getElementById("payment").style.display = "block";
+        alert(
+            "Chưa tải được mã nạp tiền!"
+        );
 
-    document.getElementById("paymentAmount").textContent =
-        amount.toLocaleString("vi-VN") + "đ";
+        return;
 
-    const username =
-        localStorage.getItem("username") || "khach";
+    }
 
-    document.getElementById("transferCode").textContent =
-        "NAPTIEN " + username.toUpperCase();
-const transferContent =
-    "NAPTIEN " + username.toUpperCase();
 
-document.getElementById("vietqr").src =
-    "https://img.vietqr.io/image/VCB-9369549277-compact2.jpg" +
-    "?amount=" + amount +
-    "&addInfo=" + encodeURIComponent(transferContent) +
-    "&accountName=" + encodeURIComponent("NGUYEN TAN LOC");
+    selectedAmount =
+        amount;
+
+
+    document.getElementById(
+        "payment"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "paymentAmount"
+    ).textContent =
+        amount.toLocaleString(
+            "vi-VN"
+        ) + "đ";
+
+
+    // Nội dung chuyển khoản
+    // dùng mã riêng của tài khoản
+
+    const transferContent =
+        depositCode;
+
+
+    document.getElementById(
+        "transferCode"
+    ).textContent =
+        transferContent;
+
+
+    // Tạo QR VietQR
+
+    document.getElementById(
+        "vietqr"
+    ).src =
+        "https://img.vietqr.io/image/VCB-" +
+        bankNumber +
+        "-compact2.jpg" +
+        "?amount=" +
+        amount +
+        "&addInfo=" +
+        encodeURIComponent(
+            transferContent
+        ) +
+        "&accountName=" +
+        encodeURIComponent(
+            bankOwner
+        );
+
 }
+
+
+// ========================================
+// SAO CHÉP SỐ TÀI KHOẢN
+// ========================================
+
 function copyBankNumber() {
-    const bankNumber = document.getElementById("bankNumber").textContent;
 
-    navigator.clipboard.writeText(bankNumber).then(function() {
-        alert("Đã sao chép số tài khoản!");
-    });
+    navigator.clipboard
+        .writeText(bankNumber)
+        .then(function() {
+
+            alert(
+                "Đã sao chép số tài khoản!"
+            );
+
+        });
+
 }
+
+
+// ========================================
+// SAO CHÉP NỘI DUNG
+// ========================================
 
 function copyTransferContent() {
-    const content = document.getElementById("transferCode").textContent;
 
-    navigator.clipboard.writeText(content).then(function() {
-        alert("Đã sao chép nội dung chuyển khoản!");
-    });
+    const content =
+        document.getElementById(
+            "transferCode"
+        ).textContent;
+
+
+    navigator.clipboard
+        .writeText(content)
+        .then(function() {
+
+            alert(
+                "Đã sao chép nội dung chuyển khoản!"
+            );
+
+        });
+
 }
+
+
+// ========================================
+// XÁC NHẬN ĐÃ CHUYỂN KHOẢN
+// ========================================
+
 function xacNhanNap() {
 
     if (selectedAmount <= 0) {
-        alert("Vui lòng chọn số tiền muốn nạp!");
+
+        alert(
+            "Vui lòng chọn số tiền muốn nạp!"
+        );
+
         return;
+
     }
 
-    const username =
-        localStorage.getItem("username") || "khach";
-
-    const transferContent =
-        document.getElementById("transferCode").textContent;
-
-    const deposit = {
-        username: username,
-        amount: selectedAmount,
-        content: transferContent,
-        time: new Date().toLocaleString("vi-VN"),
-        status: "Chờ duyệt"
-    };
-
-    let deposits =
-        JSON.parse(localStorage.getItem("deposits")) || [];
-
-    deposits.push(deposit);
-
-    localStorage.setItem(
-        "deposits",
-        JSON.stringify(deposits)
-    );
 
     alert(
-        "Đã ghi nhận yêu cầu nạp " +
-        selectedAmount.toLocaleString("vi-VN") +
-        "đ!\n\n" +
-        "Trạng thái: Chờ duyệt."
+        "Bạn đã chuyển khoản " +
+        selectedAmount.toLocaleString(
+            "vi-VN"
+        ) +
+        "đ.\n\n" +
+
+        "Nội dung chuyển khoản: " +
+        depositCode +
+        "\n\n" +
+
+        "Hệ thống sẽ tự động kiểm tra giao dịch qua SePay và cộng tiền vào tài khoản khi nhận được giao dịch."
     );
+
 }
+
+
+// ========================================
+// KHỞI ĐỘNG
+// ========================================
+
+loadAccount();
 
 </script>
 
