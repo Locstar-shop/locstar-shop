@@ -1,9 +1,15 @@
 import express from "express";
 import crypto from "node:crypto";
 import bcrypt from "bcryptjs";
+import cors from "cors";
 import { createClient } from "@supabase/supabase-js";
 
 const app = express();
+
+app.use(cors({
+  origin: "https://locstar-shop.onrender.com"
+}));
+
 const PORT = Number(process.env.PORT || 10000);
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
