@@ -1,6 +1,7 @@
 import express from "express";
 import crypto from "node:crypto";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import cors from "cors";
 import { createClient } from "@supabase/supabase-js";
 
@@ -20,6 +21,9 @@ const SUPABASE_SERVICE_ROLE_KEY =
 
 const SEPAY_WEBHOOK_SECRET =
   process.env.SEPAY_WEBHOOK_SECRET;
+
+const JWT_SECRET =
+  process.env.JWT_SECRET;
 
 const BANK_ACCOUNT =
   process.env.BANK_ACCOUNT || "9369549277";
@@ -44,6 +48,7 @@ const supabase =
       )
     : null;
 
+
 // ========================================
 // HEALTH CHECK
 // ========================================
@@ -54,6 +59,7 @@ app.get("/health", (_req, res) => {
     service: "LOC STAR backend"
   });
 });
+
 
 // ========================================
 // PUBLIC CONFIG
@@ -66,267 +72,14 @@ app.get("/api/config/public", (_req, res) => {
     accountOwner: BANK_OWNER
   });
 });
-// Đọc JSON cho các API đăng ký/đăng nhập
-app.use(express.json());
-// ========================================
-// ĐĂNG KÝ TÀI KHOẢN
-// ========================================
 
-app.post("/api/auth/register", async (req, res) => {
-  try {
-    if (!supabase) {
-      return res.status(500).json({
-        success: false,
-        message: "Database is not configured"
-      });
-    }
-
-    const username = String(
-      req.body?.username || ""
-    ).trim();
-
-    const email = String(
-      req.body?.email || ""
-    ).trim().toLowerCase();
-
-    const password = String(
-      req.body?.password || ""
-    );
-
-    // ----------------------------
-    // Kiểm tra dữ liệu
-    // ----------------------------
-
-    if (!username || !email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: "Vui lòng nhập đầy đủ thông tin"
-      });
-    }
-
-    if (username.length < 3) {
-      return res.status(400).json({
-        success: false,
-        message:
-          "Tên tài khoản phải có ít nhất 3 ký tự"
-      });
-    }
-
-    if (username.length > 30) {
-      return res.status(400).json({
-        success: false,
-        message:
-          "Tên tài khoản tối đa 30 ký tự"
-      });
-    }
-
-    if (password.length < 6) {
-      return res.status(400).json({
-        success: false,
-        message:
-          "Mật khẩu phải có ít nhất 6 ký tự"
-      });
-    }
-
-    // Chỉ cho phép username an toàn
-    if (!/^[a-zA-Z0-9_.-]+$/.test(username)) {
-      return res.status(400).json({
-        success: false,
-        message:
-          "Tên tài khoản chỉ được dùng chữ, số, dấu chấm, gạch ngang hoặc gạch dưới"
-      });
-    }
-
-    // ----------------------------
-    // Kiểm tra username đã tồn tại
-    // ----------------------------
-
-    const { data: existingUsername, error: usernameError } =
-      await supabase
-        .from("app_users")
-        .select("id")
-        .eq("username", username)
-        .maybeSingle();
-
-    if (usernameError) {
-      console.error(usernameError);
-
-      return res.status(500).json({
-        success: false,
-        message: "Không thể kiểm tra tài khoản"
-      });
-    }
-
-    if (existingUsername) {
-      return res.status(409).json({
-        success: false,
-        message:
-          "Tên tài khoản đã tồn tại"
-      });
-    }
-
-    // ----------------------------
-    // Kiểm tra email đã tồn tại
-    // ----------------------------
-
-    const {
-      data: existingEmail,
-      error: emailError
-    } = await supabase
-      .from("app_users")
-      .select("id")
-      .ilike("email", email)
-      .maybeSingle();
-
-    if (emailError) {
-      console.error(emailError);
-
-      return res.status(500).json({
-        success: false,
-        message:
-          "Không thể kiểm tra email"
-      });
-    }
-
-    if (existingEmail) {
-      return res.status(409).json({
-        success: false,
-        message:
-          "Email đã được sử dụng"
-      });
-    }
-
-    // ----------------------------
-    // Tạo mã nạp tiền riêng
-    // Ví dụ: LS7K4P92
-    // ----------------------------
-
-    let depositCode = "";
-
-    for (let i = 0; i < 10; i++) {
-      const randomPart = crypto
-        .randomBytes(4)
-        .toString("hex")
-        .toUpperCase();
-
-      depositCode = `LS${randomPart}`;
-
-      const {
-        data: existingCode,
-        error: codeError
-      } = await supabase
-        .from("app_users")
-        .select("id")
-        .eq("deposit_code", depositCode)
-        .maybeSingle();
-
-      if (codeError) {
-        console.error(codeError);
-
-        return res.status(500).json({
-          success: false,
-          message:
-            "Không thể tạo mã nạp tiền"
-        });
-      }
-
-      if (!existingCode) {
-        break;
-      }
-
-      depositCode = "";
-    }
-
-    if (!depositCode) {
-      return res.status(500).json({
-        success: false,
-        message:
-          "Không thể tạo mã nạp tiền"
-      });
-    }
-
-    // ----------------------------
-    // Mã hóa mật khẩu
-    // ----------------------------
-
-    const passwordHash =
-      await bcrypt.hash(password, 12);
-
-    // ----------------------------
-    // Tạo tài khoản
-    // ----------------------------
-
-    const {
-      data: newUser,
-      error: insertError
-    } = await supabase
-      .from("app_users")
-      .insert({
-        username,
-        email,
-        password_hash: passwordHash,
-        full_name: "",
-        balance: 0,
-        deposit_code: depositCode
-      })
-      .select(
-        "id, username, email, balance, deposit_code"
-      )
-      .single();
-
-    if (insertError) {
-      console.error(insertError);
-
-      if (insertError.code === "23505") {
-        return res.status(409).json({
-          success: false,
-          message:
-            "Tên tài khoản hoặc email đã tồn tại"
-        });
-      }
-
-      return res.status(500).json({
-        success: false,
-        message:
-          "Không thể tạo tài khoản"
-      });
-    }
-
-    // ----------------------------
-    // Trả thông tin về frontend
-    // KHÔNG trả password_hash
-    // ----------------------------
-
-    return res.status(201).json({
-      success: true,
-      message:
-        "Đăng ký tài khoản thành công",
-      user: {
-        id: newUser.id,
-        username: newUser.username,
-        email: newUser.email,
-        balance: Number(newUser.balance),
-        depositCode: newUser.deposit_code
-      }
-    });
-
-  } catch (err) {
-    console.error(
-      "Register error:",
-      err
-    );
-
-    return res.status(500).json({
-      success: false,
-      message:
-        "Đăng ký tài khoản thất bại"
-    });
-  }
-});
 
 // ========================================
 // SEPAY WEBHOOK
 // ========================================
+// QUAN TRỌNG:
+// Webhook phải dùng express.raw()
+// để kiểm tra chữ ký HMAC chính xác.
 
 app.post(
   "/api/webhook/sepay",
@@ -334,7 +87,9 @@ app.post(
     type: "application/json"
   }),
   async (req, res) => {
+
     try {
+
       if (!SEPAY_WEBHOOK_SECRET) {
         return res.status(500).json({
           success: false,
@@ -350,6 +105,7 @@ app.post(
             "Database is not configured"
         });
       }
+
 
       // ----------------------------
       // Đọc header SePay
@@ -367,9 +123,11 @@ app.post(
         ) || 0
       );
 
-      const body = Buffer.isBuffer(req.body)
-        ? req.body
-        : Buffer.from("");
+      const body =
+        Buffer.isBuffer(req.body)
+          ? req.body
+          : Buffer.from("");
+
 
       // ----------------------------
       // Kiểm tra timestamp
@@ -389,6 +147,7 @@ app.post(
         });
       }
 
+
       // ----------------------------
       // Kiểm tra HMAC
       // ----------------------------
@@ -407,11 +166,13 @@ app.post(
           )
           .digest("hex");
 
+
       const a =
         Buffer.from(expected);
 
       const b =
         Buffer.from(signature);
+
 
       if (
         a.length !== b.length ||
@@ -427,6 +188,7 @@ app.post(
         });
       }
 
+
       // ----------------------------
       // Đọc payload
       // ----------------------------
@@ -435,6 +197,7 @@ app.post(
         JSON.parse(
           body.toString("utf8")
         );
+
 
       // Chỉ xử lý tiền vào
       if (
@@ -448,9 +211,11 @@ app.post(
         });
       }
 
+
       const amount = Number(
         payload.transferAmount || 0
       );
+
 
       const transactionId =
         String(
@@ -459,19 +224,23 @@ app.post(
             ""
         ).trim();
 
+
       const content =
         String(
           payload.content || ""
         ).trim();
+
 
       const incomingAccount =
         String(
           payload.accountNumber || ""
         ).replace(/\D/g, "");
 
+
       const expectedAccount =
         String(BANK_ACCOUNT)
           .replace(/\D/g, "");
+
 
       // ----------------------------
       // Kiểm tra giao dịch
@@ -489,7 +258,8 @@ app.post(
         });
       }
 
-      // Kiểm tra tài khoản ngân hàng
+
+      // Kiểm tra đúng tài khoản ngân hàng
       if (
         incomingAccount &&
         expectedAccount &&
@@ -503,6 +273,7 @@ app.post(
         });
       }
 
+
       // ----------------------------
       // Lưu giao dịch
       // ----------------------------
@@ -515,10 +286,11 @@ app.post(
           transaction_id:
             transactionId,
 
-          gateway: String(
-            payload.gateway ||
-              BANK_NAME
-          ),
+          gateway:
+            String(
+              payload.gateway ||
+                BANK_NAME
+            ),
 
           account_number:
             String(
@@ -540,20 +312,25 @@ app.post(
                 ""
             ),
 
-          raw_payload: payload,
+          raw_payload:
+            payload,
 
-          status: "received"
+          status:
+            "received"
         });
+
 
       // ----------------------------
       // Giao dịch đã tồn tại
       // ----------------------------
 
       if (insertError) {
+
         if (
           insertError.code ===
           "23505"
         ) {
+
           const {
             data: processResult,
             error: processError
@@ -566,7 +343,9 @@ app.post(
               }
             );
 
+
           if (processError) {
+
             console.error(
               "RPC duplicate processing error:",
               processError
@@ -579,17 +358,21 @@ app.post(
             });
           }
 
+
           return res.status(200).json({
             success: true,
             duplicate: true,
-            result: processResult
+            result:
+              processResult
           });
         }
+
 
         console.error(
           "Database insert error:",
           insertError
         );
+
 
         return res.status(500).json({
           success: false,
@@ -597,6 +380,7 @@ app.post(
             "Database insert failed"
         });
       }
+
 
       // ----------------------------
       // Tự động cộng tiền
@@ -614,7 +398,9 @@ app.post(
           }
         );
 
+
       if (processError) {
+
         console.error(
           "RPC processing error:",
           processError
@@ -627,21 +413,22 @@ app.post(
         });
       }
 
-      // ----------------------------
-      // Trả kết quả
-      // ----------------------------
 
       return res.status(200).json({
         success: true,
         received: true,
-        result: processResult
+        result:
+          processResult
       });
 
+
     } catch (err) {
+
       console.error(
         "Webhook processing error:",
         err
       );
+
 
       return res.status(500).json({
         success: false,
@@ -652,6 +439,544 @@ app.post(
   }
 );
 
+
+// ========================================
+// JSON API
+// ========================================
+// Đặt SAU webhook để không phá express.raw()
+
+app.use(express.json());
+
+
+// ========================================
+// ĐĂNG KÝ TÀI KHOẢN
+// ========================================
+
+app.post(
+  "/api/auth/register",
+  async (req, res) => {
+
+    try {
+
+      if (!supabase) {
+        return res.status(500).json({
+          success: false,
+          message:
+            "Database is not configured"
+        });
+      }
+
+
+      const username =
+        String(
+          req.body?.username || ""
+        ).trim();
+
+
+      const email =
+        String(
+          req.body?.email || ""
+        ).trim().toLowerCase();
+
+
+      const password =
+        String(
+          req.body?.password || ""
+        );
+
+
+      // ----------------------------
+      // Kiểm tra dữ liệu
+      // ----------------------------
+
+      if (
+        !username ||
+        !email ||
+        !password
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Vui lòng nhập đầy đủ thông tin"
+        });
+      }
+
+
+      if (username.length < 3) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Tên tài khoản phải có ít nhất 3 ký tự"
+        });
+      }
+
+
+      if (username.length > 30) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Tên tài khoản tối đa 30 ký tự"
+        });
+      }
+
+
+      if (password.length < 6) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Mật khẩu phải có ít nhất 6 ký tự"
+        });
+      }
+
+
+      if (
+        !/^[a-zA-Z0-9_.-]+$/.test(
+          username
+        )
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Tên tài khoản chỉ được dùng chữ, số, dấu chấm, gạch ngang hoặc gạch dưới"
+        });
+      }
+
+
+      // ----------------------------
+      // Kiểm tra username
+      // ----------------------------
+
+      const {
+        data: existingUsername,
+        error: usernameError
+      } =
+        await supabase
+          .from("app_users")
+          .select("id")
+          .eq(
+            "username",
+            username
+          )
+          .maybeSingle();
+
+
+      if (usernameError) {
+
+        console.error(
+          usernameError
+        );
+
+        return res.status(500).json({
+          success: false,
+          message:
+            "Không thể kiểm tra tài khoản"
+        });
+      }
+
+
+      if (existingUsername) {
+        return res.status(409).json({
+          success: false,
+          message:
+            "Tên tài khoản đã tồn tại"
+        });
+      }
+
+
+      // ----------------------------
+      // Kiểm tra email
+      // ----------------------------
+
+      const {
+        data: existingEmail,
+        error: emailError
+      } =
+        await supabase
+          .from("app_users")
+          .select("id")
+          .ilike(
+            "email",
+            email
+          )
+          .maybeSingle();
+
+
+      if (emailError) {
+
+        console.error(
+          emailError
+        );
+
+        return res.status(500).json({
+          success: false,
+          message:
+            "Không thể kiểm tra email"
+        });
+      }
+
+
+      if (existingEmail) {
+        return res.status(409).json({
+          success: false,
+          message:
+            "Email đã được sử dụng"
+        });
+      }
+
+
+      // ----------------------------
+      // Tạo mã nạp tiền
+      // ----------------------------
+
+      let depositCode = "";
+
+
+      for (
+        let i = 0;
+        i < 10;
+        i++
+      ) {
+
+        const randomPart =
+          crypto
+            .randomBytes(4)
+            .toString("hex")
+            .toUpperCase();
+
+
+        depositCode =
+          `LS${randomPart}`;
+
+
+        const {
+          data: existingCode,
+          error: codeError
+        } =
+          await supabase
+            .from("app_users")
+            .select("id")
+            .eq(
+              "deposit_code",
+              depositCode
+            )
+            .maybeSingle();
+
+
+        if (codeError) {
+
+          console.error(
+            codeError
+          );
+
+          return res.status(500).json({
+            success: false,
+            message:
+              "Không thể tạo mã nạp tiền"
+          });
+        }
+
+
+        if (!existingCode) {
+          break;
+        }
+
+
+        depositCode = "";
+      }
+
+
+      if (!depositCode) {
+        return res.status(500).json({
+          success: false,
+          message:
+            "Không thể tạo mã nạp tiền"
+        });
+      }
+
+
+      // ----------------------------
+      // Mã hóa mật khẩu
+      // ----------------------------
+
+      const passwordHash =
+        await bcrypt.hash(
+          password,
+          12
+        );
+
+
+      // ----------------------------
+      // Tạo tài khoản
+      // ----------------------------
+
+      const {
+        data: newUser,
+        error: insertError
+      } =
+        await supabase
+          .from("app_users")
+          .insert({
+            username,
+            email,
+            password_hash:
+              passwordHash,
+            full_name: "",
+            balance: 0,
+            deposit_code:
+              depositCode
+          })
+          .select(
+            "id, username, email, balance, deposit_code"
+          )
+          .single();
+
+
+      if (insertError) {
+
+        console.error(
+          insertError
+        );
+
+
+        if (
+          insertError.code ===
+          "23505"
+        ) {
+          return res.status(409).json({
+            success: false,
+            message:
+              "Tên tài khoản hoặc email đã tồn tại"
+          });
+        }
+
+
+        return res.status(500).json({
+          success: false,
+          message:
+            "Không thể tạo tài khoản"
+        });
+      }
+
+
+      return res.status(201).json({
+        success: true,
+        message:
+          "Đăng ký tài khoản thành công",
+
+        user: {
+          id: newUser.id,
+          username:
+            newUser.username,
+          email:
+            newUser.email,
+          balance:
+            Number(
+              newUser.balance
+            ),
+          depositCode:
+            newUser.deposit_code
+        }
+      });
+
+
+    } catch (err) {
+
+      console.error(
+        "Register error:",
+        err
+      );
+
+
+      return res.status(500).json({
+        success: false,
+        message:
+          "Đăng ký tài khoản thất bại"
+      });
+    }
+  }
+);
+
+
+// ========================================
+// ĐĂNG NHẬP
+// ========================================
+
+app.post(
+  "/api/auth/login",
+  async (req, res) => {
+
+    try {
+
+      if (!supabase) {
+        return res.status(500).json({
+          success: false,
+          message:
+            "Database is not configured"
+        });
+      }
+
+
+      if (!JWT_SECRET) {
+        return res.status(500).json({
+          success: false,
+          message:
+            "JWT secret is not configured"
+        });
+      }
+
+
+      const username =
+        String(
+          req.body?.username || ""
+        ).trim();
+
+
+      const password =
+        String(
+          req.body?.password || ""
+        );
+
+
+      if (
+        !username ||
+        !password
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Vui lòng nhập đầy đủ thông tin"
+        });
+      }
+
+
+      // ----------------------------
+      // Tìm tài khoản
+      // ----------------------------
+
+      const {
+        data: user,
+        error: userError
+      } =
+        await supabase
+          .from("app_users")
+          .select(
+            "id, username, email, password_hash, balance, deposit_code"
+          )
+          .eq(
+            "username",
+            username
+          )
+          .maybeSingle();
+
+
+      if (userError) {
+
+        console.error(
+          userError
+        );
+
+        return res.status(500).json({
+          success: false,
+          message:
+            "Không thể kiểm tra tài khoản"
+        });
+      }
+
+
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          message:
+            "Tên tài khoản hoặc mật khẩu không đúng"
+        });
+      }
+
+
+      // ----------------------------
+      // Kiểm tra mật khẩu
+      // ----------------------------
+
+      const passwordCorrect =
+        await bcrypt.compare(
+          password,
+          user.password_hash
+        );
+
+
+      if (!passwordCorrect) {
+        return res.status(401).json({
+          success: false,
+          message:
+            "Tên tài khoản hoặc mật khẩu không đúng"
+        });
+      }
+
+
+      // ----------------------------
+      // Tạo JWT
+      // ----------------------------
+
+      const token =
+        jwt.sign(
+          {
+            userId: user.id,
+            username:
+              user.username
+          },
+          JWT_SECRET,
+          {
+            expiresIn:
+              "7d"
+          }
+        );
+
+
+      // ----------------------------
+      // Trả kết quả
+      // ----------------------------
+
+      return res.status(200).json({
+
+        success: true,
+
+        message:
+          "Đăng nhập thành công",
+
+        token,
+
+        user: {
+          id: user.id,
+          username:
+            user.username,
+          email:
+            user.email,
+          balance:
+            Number(
+              user.balance
+            ),
+          depositCode:
+            user.deposit_code
+        }
+
+      });
+
+
+    } catch (err) {
+
+      console.error(
+        "Login error:",
+        err
+      );
+
+
+      return res.status(500).json({
+        success: false,
+        message:
+          "Đăng nhập thất bại"
+      });
+    }
+  }
+);
 
 
 // ========================================
