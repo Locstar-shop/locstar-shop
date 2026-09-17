@@ -210,12 +210,11 @@ app.post(
       );
 
 
-      const transactionId =
-        String(
-          payload.id ||
-            payload.referenceCode ||
-            ""
-        ).trim();
+      const transactionId = String(
+  payload.id !== undefined && payload.id !== null
+    ? payload.id
+    : (payload.referenceCode ?? "")
+).trim();
 
 
       const content =
