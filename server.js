@@ -252,19 +252,7 @@ console.log("BODY:", req.body.toString("utf8"));
       }
 
 
-      // Kiểm tra đúng tài khoản ngân hàng
-      if (
-        incomingAccount &&
-        expectedAccount &&
-        incomingAccount !==
-          expectedAccount
-      ) {
-        return res.status(400).json({
-          success: false,
-          message:
-            "Wrong bank account"
-        });
-      }
+      
 
 
       // ----------------------------
