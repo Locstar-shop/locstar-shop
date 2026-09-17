@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHOP MM</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f6fa;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 230px;
+            height: 100vh;
+            background: #30265b;
+            color: white;
+            padding-top: 20px;
+        }
+
+        .logo {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .menu-title {
+            font-size: 12px;
+            color: #b9afe8;
+            padding: 20px 20px 10px;
+        }
+
+        .menu-item {
+            padding: 14px 25px;
+            color: #ddd8f5;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .menu-item:hover {
+            background: #453878;
+            color: white;
+        }
+
+        .menu-item.active {
+            background: #453878;
+            color: white;
+        }
+
+        .main {
+            margin-left: 230px;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 70px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .search {
+            color: #777;
+            font-size: 15px;
+        }
+
+        .support {
+            background: #22c55e;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .login-box {
+            background: #4b9df8;
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .login-box p {
+            font-size: 16px;
+            margin-bottom: 18px;
+        }
+
+        .btn {
+            padding: 11px 25px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .btn-login {
+            background: white;
+            color: #347ee8;
+        }
+
+        .btn-register {
+            background: transparent;
+            border: 1px solid white;
+            color: white;
+        }
+
+        .notice {
+            background: white;
+            border-radius: 8px;
+            padding: 22px;
+            margin-bottom: 18px;
+            border: 1px solid #ddd;
+        }
+
+        .notice h3 {
+            color: #ef4444;
+            margin-bottom: 15px;
+        }
+
+        .notice p {
+            color: #555;
+            line-height: 1.7;
+        }
+   .sidebar {
+    height: 100vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+} </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+
+        <div class="logo">
+            LOC STAR
+        </div>
+
+        <div class="menu-title">MENU CHÍNH</div>
+
+        <div class="menu-item active">⌂ &nbsp; Trang chủ</div>
+        <div class="menu-item" onclick="window.location.href='don-hang.html'">
+    ▤ &nbsp; Quản lý đơn hàng
+</div>
+        <div class="menu-item" onclick="window.location.href='luong-tien.html'">
+    ◷ &nbsp; Luồng tiền
+</div>
+        <div class="menu-item" onclick="window.location.href='account.html'">♙ &nbsp; Tài khoản của tôi</div>
+        <div class="menu-item" onclick="window.location.href='nap-tien.html'">▣ &nbsp; Nạp tiền</div>
+        <div class="menu-item" onclick="window.location.href='lich-su-nap.html'">📋 &nbsp; Lịch sử nạp tiền</div>
+        <div class="menu-item">◉ &nbsp; Hoàn tiền</div>
+        <div class="menu-item">▥ &nbsp; Thống kê</div>
+        <div class="menu-item">◇ &nbsp; Bảng giá dịch vụ</div>
+        <div class="menu-item">◉ &nbsp; Tạo web con</div>
+        <div class="menu-item">▣ &nbsp; Tài liệu API</div>
+        <div class="menu-item">♧ &nbsp; Hỗ trợ</div>
+        <div class="menu-item">♧ &nbsp; Thông báo</div>
+
+        <div class="menu-title">NỀN TẢNG</div>
+
+
+<div class="menu-item" onclick="toggleFacebook()">🔵 &nbsp; Facebook <span style="float:right;">⌄</span></div>
+
+<div id="facebookMenu" style="display:none; padding-left:25px;">
+
+    <div class="menu-item">👍 &nbsp; Tăng Like bài viết</div>
+    <div class="menu-item">👤 &nbsp; Tăng Follow Profile & Page</div>
+    <div class="menu-item">❤️ &nbsp; Tăng Like Page & Follow Page</div>
+    <div class="menu-item">👥 &nbsp; Tăng thành viên nhóm</div>
+    <div class="menu-item">💬 &nbsp; Tăng bình luận</div>
+    <div class="menu-item">👁️ &nbsp; Tăng View video</div>
+    <div class="menu-item">🔴 &nbsp; Tăng mắt livestream</div>
+    <div class="menu-item">🔄 &nbsp; Tăng chia sẻ bài viết</div>
+    <div class="menu-item">⭐ &nbsp; Tăng Review Page</div>
+    <div class="menu-item">❤️ &nbsp; Tăng Like bình luận</div>
+    <div class="menu-item">📖 &nbsp; Tăng View Story</div>
+
+</div>
+<div class="menu-item" onclick="toggleTikTok()">🎵 &nbsp; TikTok <span style="float:right;">⌄</span></div>
+
+<div id="tiktokMenu" style="display:none; padding-left:25px;">
+
+    <div class="menu-item">❤️ &nbsp; Tăng tim TikTok</div>
+    <div class="menu-item">👤 &nbsp; Tăng theo dõi TikTok</div>
+    <div class="menu-item">👁️ &nbsp; Tăng view TikTok</div>
+    <div class="menu-item">🔄 &nbsp; Tăng share TikTok</div>
+    <div class="menu-item">🔖 &nbsp; Tăng save TikTok</div>
+    <div class="menu-item">💬 &nbsp; Tăng bình luận TikTok</div>
+    <div class="menu-item">👀 &nbsp; Tăng mắt livestream</div>
+    <div class="menu-item">⭐ &nbsp; TikTok VIP View</div>
+    <div class="menu-item">⭐ &nbsp; Tăng yêu thích TikTok</div>
+    <div class="menu-item">👤 &nbsp; Tăng truy cập Profile</div>
+    <div class="menu-item">❤️ &nbsp; Tăng tương tác video</div>
+    <div class="menu-item">🔥 &nbsp; Tăng tương tác livestream</div>
+
+</div>
+<div class="menu-item" onclick="toggleInstagram()">📷 &nbsp; Instagram <span style="float:right;">⌄</span></div>
+
+<div id="instagramMenu" style="display:none; padding-left:25px;">
+
+    <div class="menu-item">❤️ &nbsp; Tăng Like Instagram</div>
+    <div class="menu-item">👤 &nbsp; Tăng Follow Instagram</div>
+    <div class="menu-item">👁️ &nbsp; Tăng View Instagram</div>
+    <div class="menu-item">💬 &nbsp; Tăng bình luận Instagram</div>
+    <div class="menu-item">🔄 &nbsp; Tăng Share Instagram</div>
+    <div class="menu-item">🔖 &nbsp; Tăng Save Instagram</div>
+    <div class="menu-item">⭐ &nbsp; Tăng yêu thích Instagram</div>
+    <div class="menu-item">👤 &nbsp; Tăng truy cập Profile</div>
+    <div class="menu-item">🔥 &nbsp; Tăng tương tác Instagram</div>
+    <div class="menu-item">📸 &nbsp; Tăng tương tác Story</div>
+    <div class="menu-item">🎥 &nbsp; Tăng View Reels</div>
+    <div class="menu-item">❤️ &nbsp; Tăng Like Reels</div>
+
+</div>
+<div class="menu-item" onclick="toggleYoutube()">▶️ &nbsp; YouTube <span style="float:right;">⌄</span></div>
+
+<div id="youtubeMenu" style="display:none; padding-left:25px;">
+
+    <div class="menu-item">👍 &nbsp; Tăng Like YouTube</div>
+    <div class="menu-item">👤 &nbsp; Tăng Subscribe YouTube</div>
+    <div class="menu-item">👁️ &nbsp; Tăng View YouTube</div>
+    <div class="menu-item">💬 &nbsp; Tăng bình luận YouTube</div>
+    <div class="menu-item">🔄 &nbsp; Tăng Share YouTube</div>
+    <div class="menu-item">🔖 &nbsp; Tăng yêu thích YouTube</div>
+    <div class="menu-item">⏱️ &nbsp; Tăng thời gian xem</div>
+    <div class="menu-item">🔥 &nbsp; Tăng tương tác YouTube</div>
+    <div class="menu-item">📺 &nbsp; Tăng View Shorts</div>
+    <div class="menu-item">👍 &nbsp; Tăng Like Shorts</div>
+
+</div>
+<div class="menu-item" onclick="toggleShopee()">🛍️ &nbsp; Shopee <span style="float:right;">⌄</span></div>
+
+<div id="shopeeMenu" style="display:none; padding-left:25px;">
+
+    <div class="menu-item">❤️ &nbsp; Tăng Like Shopee</div>
+    <div class="menu-item">👤 &nbsp; Tăng Follow Shopee</div>
+    <div class="menu-item">👁️ &nbsp; Tăng View Shopee</div>
+    <div class="menu-item">💬 &nbsp; Tăng đánh giá Shopee</div>
+    <div class="menu-item">⭐ &nbsp; Tăng đánh giá 5 sao</div>
+    <div class="menu-item">🛒 &nbsp; Tăng lượt mua Shopee</div>
+    <div class="menu-item">🔄 &nbsp; Tăng chia sẻ Shopee</div>
+    <div class="menu-item">🔥 &nbsp; Tăng tương tác Shopee</div>
+    <div class="menu-item">📈 &nbsp; Tăng truy cập sản phẩm</div>
+    <div class="menu-item">🏪 &nbsp; Tăng Follow Shop</div>
+
+</div>
+
+
+<div class="menu-item" onclick="toggleGoogle()">🔍 &nbsp; Google <span style="float:right;">⌄</span></div>
+
+<div id="googleMenu" style="display:none; padding-left:25px;">
+
+    <div class="menu-item">⭐ &nbsp; Tăng Google Review</div>
+    <div class="menu-item">👍 &nbsp; Tăng Google Like</div>
+    <div class="menu-item">👁️ &nbsp; Tăng lượt xem Google</div>
+    <div class="menu-item">📍 &nbsp; Tăng tương tác Google Maps</div>
+    <div class="menu-item">💬 &nbsp; Tăng đánh giá Google Maps</div>
+    <div class="menu-item">🌟 &nbsp; Tăng đánh giá 5 sao</div>
+    <div class="menu-item">🔎 &nbsp; Tăng tìm kiếm Google</div>
+    <div class="menu-item">📈 &nbsp; Tăng tương tác doanh nghiệp</div>
+
+</div>
+
+
+<div class="menu-item" onclick="toggleTelegram()">✈️ &nbsp; Telegram <span style="float:right;">⌄</span></div>
+
+<div id="telegramMenu" style="display:none; padding-left:25px;">
+
+    <div class="menu-item">👤 &nbsp; Tăng Member Telegram</div>
+    <div class="menu-item">👁️ &nbsp; Tăng View Telegram</div>
+    <div class="menu-item">❤️ &nbsp; Tăng Reaction Telegram</div>
+    <div class="menu-item">💬 &nbsp; Tăng Comment Telegram</div>
+    <div class="menu-item">🔄 &nbsp; Tăng Share Telegram</div>
+    <div class="menu-item">🔥 &nbsp; Tăng tương tác Telegram</div>
+    <div class="menu-item">📈 &nbsp; Tăng truy cập Telegram</div>
+    <div class="menu-item">⭐ &nbsp; Tăng Reaction bài viết</div>
+
+</div>
+
+
+<div class="menu-item" onclick="toggleXTwitter()">𝕏 &nbsp; X-Twitter <span style="float:right;">⌄</span></div>
+
+<div id="xTwitterMenu" style="display:none; padding-left:25px;">
+
+    <div class="menu-item">❤️ &nbsp; Tăng Like X-Twitter</div>
+    <div class="menu-item">👤 &nbsp; Tăng Follow X-Twitter</div>
+    <div class="menu-item">👁️ &nbsp; Tăng View X-Twitter</div>
+    <div class="menu-item">💬 &nbsp; Tăng Reply X-Twitter</div>
+    <div class="menu-item">🔄 &nbsp; Tăng Retweet X-Twitter</div>
+    <div class="menu-item">🔖 &nbsp; Tăng Bookmark X-Twitter</div>
+    <div class="menu-item">🔥 &nbsp; Tăng tương tác X-Twitter</div>
+    <div class="menu-item">📈 &nbsp; Tăng truy cập Profile</div>
+
+</div>
+
+
+<div class="menu-item" onclick="toggleThreads()">◎ &nbsp; Threads <span style="float:right;">⌄</span></div>
+
+<div id="threadsMenu" style="display:none; padding-left:25px;">
+
+    <div class="menu-item">❤️ &nbsp; Tăng Like Threads</div>
+    <div class="menu-item">👤 &nbsp; Tăng Follow Threads</div>
+    <div class="menu-item">👁️ &nbsp; Tăng View Threads</div>
+    <div class="menu-item">💬 &nbsp; Tăng Comment Threads</div>
+    <div class="menu-item">🔄 &nbsp; Tăng Share Threads</div>
+    <div class="menu-item">🔖 &nbsp; Tăng Repost Threads</div>
+    <div class="menu-item">🔥 &nbsp; Tăng tương tác Threads</div>
+    <div class="menu-item">📈 &nbsp; Tăng truy cập Profile</div>
+
+</div>
+
+
+<div class="menu-item" onclick="toggleLazada()">📦 &nbsp; Lazada <span style="float:right;">⌄</span></div>
+
+<div id="lazadaMenu" style="display:none; padding-left:25px;">
+
+    <div class="menu-item">❤️ &nbsp; Tăng Like Lazada</div>
+    <div class="menu-item">👤 &nbsp; Tăng Follow Lazada</div>
+    <div class="menu-item">👁️ &nbsp; Tăng View Lazada</div>
+    <div class="menu-item">⭐ &nbsp; Tăng đánh giá Lazada</div>
+    <div class="menu-item">🌟 &nbsp; Tăng đánh giá 5 sao</div>
+    <div class="menu-item">🛒 &nbsp; Tăng lượt mua Lazada</div>
+    <div class="menu-item">💬 &nbsp; Tăng bình luận Lazada</div>
+    <div class="menu-item">🔄 &nbsp; Tăng chia sẻ Lazada</div>
+    <div class="menu-item">🔥 &nbsp; Tăng tương tác Lazada</div>
+    <div class="menu-item">🏪 &nbsp; Tăng Follow Shop</div>
+
+</div>
+    </div>
+
+
+    <div class="main">
+
+        <div class="topbar">
+           <div class="search">
+    🔍
+    <input
+        type="text"
+        id="serviceSearch"
+        placeholder="Tìm dịch vụ..."
+        style="border:none;outline:none;background:transparent;font-size:16px;width:180px;"
+    >
+</div>
+
+            <div class="support-box">
+    <div style="position:relative;display:inline-block;">
+    <button class="support"
+        onclick="document.getElementById('supportMenu').style.display =
+        document.getElementById('supportMenu').style.display === 'block' ? 'none' : 'block';">
+        + Hỗ trợ
+    </button>
+
+    <div id="supportMenu"
+        style="display:none;position:absolute;right:0;top:45px;background:white;padding:10px;border-radius:10px;box-shadow:0 4px 15px rgba(0,0,0,.2);z-index:9999;min-width:170px;">
+
+        <a href="https://www.facebook.com/tan.loc.620554"
+           target="_blank"
+           style="display:block;padding:10px;text-decoration:none;color:#1877f2;">
+           📘 Facebook
+        </a>
+
+        <a href="https://zalo.me/0369549277"
+           target="_blank"
+           style="display:block;padding:10px;text-decoration:none;color:#0084ff;">
+           💬 Zalo
+        </a>
+
+        <a href="https://t.me/Locstar207"
+           target="_blank"
+           style="display:block;padding:10px;text-decoration:none;color:#229ED9;">
+           ✈️ Telegram
+        </a>
+
+    </div>
+</div>
+
+    <div class="support-menu">
+        <a href="https://www.facebook.com/tan.loc.620554" target="_blank">
+            📘 Facebook
+        </a>
+
+        <a href="https://zalo.me/0369549277" target="_blank">
+            💬 Zalo
+        </a>
+
+        <a href="https://t.me/Locstar207" target="_blank">
+            ✈️ Telegram
+        </a>
+    </div>
+</div>
+        </div>
+
+
+        <div class="content">
+
+            <div class="page-title">
+                TRANG CHỦ
+            </div>
+
+            <div class="login-box" id="userBox">
+                <p>
+                    . Đăng nhập để sử dụng đầy đủ các tính năng của hệ thống.
+                </p>
+
+                <button class="btn btn-login" onclick="openLogin()">
+                    Đăng nhập
+                </button>
+
+                <button class="btn btn-register" onclick="window.location.href='register.html'">
+                    Đăng ký
+                </button>
+            </div>
+
+
+            <div class="notice">
+
+                <h3>Cần hỗ trợ gấp</h3>
+
+                <p>🕐 <b>Giờ làm việc:</b></p>
+
+                <p>Thứ 2 - Chủ nhật: 08:00 - 24:00</p>
+
+                <hr style="margin:15px 0; border:none; border-top:1px solid #ddd;">
+
+                <p>💬 <b>Kênh liên hệ:</b></p>
+
+<br>
+
+<button class="btn"
+    onclick="window.open('https://www.facebook.com/tan.loc.620554', '_blank')"
+    style="background:#5865f2;color:white;">
+    📘 Facebook
+</button>
+
+<button class="btn"
+    onclick="window.open('https://zalo.me/0369549277', '_blank')"
+    style="background:#16a5b5;color:white;">
+    💬 Zalo
+</button>
+
+<a href="https://t.me/Locstar207" target="_blank"
+   style="display:inline-block;text-decoration:none;background:#229ED9;color:white;padding:12px 20px;border-radius:8px;">
+  ✈️ Telegram
+</a>
+
+            </div>
+
+
+            <div class="notice">
+                <p>
+                    🎉 <b>Khuyến mãi:</b> Giảm 10% cho khách hàng mới.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+<script>
+function openLogin() {
+    const username = prompt("Nhập tên tài khoản:");
+    if (!username) return;
+
+    const password = prompt("Nhập mật khẩu:");
+    if (!password) return;
+localStorage.setItem("loggedIn", "true");
+localStorage.setItem("username", username);
+    alert("Đăng nhập thành công! Xin chào " + username);
+}function updateLoginStatus() {
+    const loggedIn = localStorage.getItem("loggedIn");
+    const username = localStorage.getItem("username");
+    const userBox = document.getElementById("userBox");
+
+    if (loggedIn === "true" && username && userBox) {
+        userBox.innerHTML = `
+            <p style="font-size:20px; font-weight:bold;">
+                Xin chào, ${username}
+            </p>
+            <button class="btn"
+                onclick="logout()"
+                style="background:#e53935;color:white;">
+                Đăng xuất
+            </button>
+        `;
+    }
+}
+
+function logout() {
+    localStorage.removeItem("loggedIn");
+    alert("Đã đăng xuất!");
+    location.reload();
+}
+
+updateLoginStatus();
+function toggleTikTok() {
+    const menu = document.getElementById("tiktokMenu");
+
+    if (menu.style.display === "none") {
+        menu.style.display = "block";
+    } else {
+        menu.style.display = "none";
+    }
+}
+function toggleInstagram() {
+    const menu = document.getElementById("instagramMenu");
+
+    if (menu.style.display === "none") {
+        menu.style.display = "block";
+    } else {
+        menu.style.display = "none";
+    }
+}
+function toggleYoutube() {
+    const menu = document.getElementById("youtubeMenu");
+
+    if (menu.style.display === "none") {
+        menu.style.display = "block";
+    } else {
+        menu.style.display = "none";
+    }
+}
+function toggleShopee() {
+    const menu = document.getElementById("shopeeMenu");
+
+    if (menu.style.display === "none") {
+        menu.style.display = "block";
+    } else {
+        menu.style.display = "none";
+    }
+}
+
+
+function toggleGoogle() {
+    const menu = document.getElementById("googleMenu");
+
+    if (menu.style.display === "none") {
+        menu.style.display = "block";
+    } else {
+        menu.style.display = "none";
+    }
+}
+
+
+function toggleTelegram() {
+    const menu = document.getElementById("telegramMenu");
+
+    if (menu.style.display === "none") {
+        menu.style.display = "block";
+    } else {
+        menu.style.display = "none";
+    }
+}
+
+
+function toggleXTwitter() {
+    const menu = document.getElementById("xTwitterMenu");
+
+    if (menu.style.display === "none") {
+        menu.style.display = "block";
+    } else {
+        menu.style.display = "none";
+    }
+}
+
+
+function toggleThreads() {
+    const menu = document.getElementById("threadsMenu");
+
+    if (menu.style.display === "none") {
+        menu.style.display = "block";
+    } else {
+        menu.style.display = "none";
+    }
+}
+
+
+function toggleLazada() {
+    const menu = document.getElementById("lazadaMenu");
+
+    if (menu.style.display === "none") {
+        menu.style.display = "block";
+    } else {
+        menu.style.display = "none";
+    }
+}
+function toggleFacebook() {
+    const menu = document.getElementById("facebookMenu");
+
+    if (menu.style.display === "none") {
+        menu.style.display = "block";
+    } else {
+        menu.style.display = "none";
+    }
+}
+// ===============================
+// BẤM DỊCH VỤ → ĐI TỚI TRANG ĐẶT ĐƠN
+// ===============================
+
+const serviceMap = {
+
+    facebookMenu: [
+        "fb_like",
+        "fb_follow",
+        "fb_page_like",
+        "fb_group",
+        "fb_comment",
+        "fb_view",
+        "fb_live",
+        "fb_share",
+        "fb_review",
+        "fb_like_comment",
+        "fb_story"
+    ],
+
+    tiktokMenu: [
+        "tt_like",
+        "tt_follow",
+        "tt_view",
+        "tt_share",
+        "tt_save",
+        "tt_comment",
+        "tt_live",
+        "tt_vip",
+        "tt_favorite",
+        "tt_profile",
+        "tt_engagement",
+        "tt_live_engagement"
+    ],
+
+    instagramMenu: [
+        "ig_like",
+        "ig_follow",
+        "ig_view",
+        "ig_comment",
+        "ig_share",
+        "ig_save",
+        "ig_favorite",
+        "ig_profile",
+        "ig_engagement",
+        "ig_story",
+        "ig_reels",
+        "ig_reels_like"
+    ],
+
+    youtubeMenu: [
+        "yt_like",
+        "yt_subscribe",
+        "yt_view",
+        "yt_comment",
+        "yt_share",
+        "yt_save",
+        "yt_watchtime",
+        "yt_engagement",
+        "yt_shorts_view",
+        "yt_shorts_like"
+    ],
+
+    shopeeMenu: [
+        "sp_like",
+        "sp_follow",
+        "sp_view",
+        "sp_review",
+        "sp_5star",
+        "sp_buy",
+        "sp_share",
+        "sp_engagement",
+        "sp_product_visit",
+        "sp_shop_follow"
+    ],
+
+    googleMenu: [
+        "gg_review",
+        "gg_like",
+        "gg_view",
+        "gg_maps",
+        "gg_maps_review",
+        "gg_5star",
+        "gg_search",
+        "gg_business"
+    ],
+
+    telegramMenu: [
+        "tg_member",
+        "tg_view",
+        "tg_reaction",
+        "tg_comment",
+        "tg_share",
+        "tg_engagement",
+        "tg_visit",
+        "tg_post_reaction"
+    ],
+
+    xTwitterMenu: [
+        "x_like",
+        "x_follow",
+        "x_view",
+        "x_reply",
+        "x_retweet",
+        "x_bookmark",
+        "x_engagement",
+        "x_profile"
+    ],
+
+    threadsMenu: [
+        "th_like",
+        "th_follow",
+        "th_view",
+        "th_comment",
+        "th_share",
+        "th_repost",
+        "th_engagement",
+        "th_profile"
+    ],
+
+    lazadaMenu: [
+        "lz_like",
+        "lz_follow",
+        "lz_view",
+        "lz_review",
+        "lz_5star",
+        "lz_buy",
+        "lz_comment",
+        "lz_share",
+        "lz_engagement",
+        "lz_shop_follow"
+    ]
+};
+
+
+// ===============================
+// BẤM DỊCH VỤ → TRANG ĐẶT ĐƠN
+// ===============================
+
+const platformNames = {
+    facebookMenu: "Facebook",
+    tiktokMenu: "TikTok",
+    instagramMenu: "Instagram",
+    youtubeMenu: "YouTube",
+    shopeeMenu: "Shopee",
+    googleMenu: "Google",
+    telegramMenu: "Telegram",
+    xTwitterMenu: "X-Twitter",
+    threadsMenu: "Threads",
+    lazadaMenu: "Lazada"
+};
+
+
+// Gắn click cho từng dịch vụ
+Object.keys(serviceMap).forEach(function(menuId) {
+
+    const menu = document.getElementById(menuId);
+
+    if (!menu) return;
+
+    const items = menu.querySelectorAll(".menu-item");
+
+    items.forEach(function(item, index) {
+
+        item.style.cursor = "pointer";
+
+        item.addEventListener("click", function(event) {
+
+            event.stopPropagation();
+
+            const serviceCode =
+                serviceMap[menuId][index];
+
+            if (!serviceCode) {
+                alert("Dịch vụ chưa được cấu hình!");
+                return;
+            }
+
+            const platformName =
+                platformNames[menuId];
+
+            if (!platformName) {
+                alert("Nền tảng chưa được cấu hình!");
+                return;
+            }
+
+            window.location.href =
+                "dat-don.html?platform=" +
+                encodeURIComponent(platformName) +
+                "&service=" +
+                encodeURIComponent(serviceCode);
+
+        });
+
+    });
+
+});
+document.getElementById("serviceSearch").addEventListener("input", function () {
+    const keyword = this.value.toLowerCase().trim();
+
+    document.querySelectorAll(".menu-item").forEach(function (item) {
+        const text = item.innerText.toLowerCase();
+
+        if (keyword === "" || text.includes(keyword)) {
+            item.style.display = "";
+        } else {
+            item.style.display = "none";
+        }
+    });
+});
+</script>
+</body>
+</html>

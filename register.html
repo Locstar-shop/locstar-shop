@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đăng ký - LOC STAR</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f5f6fa;
+    min-height: 100vh;
+}
+
+.header {
+    background: #30265b;
+    color: white;
+    padding: 20px 40px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.container {
+    width: 500px;
+    max-width: 90%;
+    margin: 60px auto;
+}
+
+.register-box {
+    background: white;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.12);
+}
+
+h1 {
+    text-align: center;
+    color: #30265b;
+    margin-bottom: 30px;
+}
+
+label {
+    display: block;
+    margin-top: 18px;
+    margin-bottom: 7px;
+    font-weight: bold;
+    color: #333;
+}
+
+input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #347ee8;
+}
+
+.btn-register {
+    width: 100%;
+    margin-top: 25px;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    background: #347ee8;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-register:hover {
+    background: #2568c7;
+}
+
+.back {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #347ee8;
+    text-decoration: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    LOC STAR
+</div>
+
+<div class="container">
+
+    <div class="register-box">
+
+        <h1>Đăng ký tài khoản</h1>
+
+        <form onsubmit="registerAccount(event)">
+
+            <label>Tên tài khoản</label>
+            <input type="text" id="username" placeholder="Nhập tên tài khoản" required>
+
+            <label>Email</label>
+            <input type="email" id="email" placeholder="Nhập email" required>
+
+            <label>Mật khẩu</label>
+            <input type="password" id="password" placeholder="Nhập mật khẩu" required>
+
+            <label>Xác nhận mật khẩu</label>
+            <input type="password" id="confirm" placeholder="Nhập lại mật khẩu" required>
+
+            <button class="btn-register" type="submit">
+                ĐĂNG KÝ
+            </button>
+
+        </form>
+
+        <a class="back" href="index.html">
+            ← Quay lại trang chủ
+        </a>
+
+    </div>
+
+</div>
+
+<script>
+function registerAccount(event) {
+    event.preventDefault();
+
+    let username = document.getElementById("username").value;
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+    let confirm = document.getElementById("confirm").value;
+
+    if (password !== confirm) {
+        alert("Mật khẩu xác nhận không giống nhau!");
+        return;
+    }
+
+    if (password.length < 6) {
+        alert("Mật khẩu phải có ít nhất 6 ký tự!");
+        return;
+    }
+
+    localStorage.setItem("username", username);
+    localStorage.setItem("email", email);
+    localStorage.setItem("password", password);
+
+    alert("Đăng ký thành công!");
+
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quản lý đơn hàng - LOC STAR</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f6fb;color:#222}
+.topbar{height:72px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:10}
+.brand{font-size:25px;font-weight:800;color:#30255d}.back{border:0;background:#30255d;color:#fff;padding:11px 18px;border-radius:8px;cursor:pointer}
+.container{max-width:1200px;margin:auto;padding:28px 20px 50px}h1{margin:0;font-size:28px}.sub{color:#6b7280;margin-top:7px;font-size:14px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:22px 0}.stat,.toolbar,.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.stat{padding:18px}.label{color:#6b7280;font-size:14px;margin-bottom:8px}.value{font-size:24px;font-weight:800}
+.toolbar{padding:16px;display:flex;gap:12px;margin-bottom:18px}.search{flex:1}.search input,.toolbar select{width:100%;height:44px;border:1px solid #d1d5db;border-radius:8px;padding:0 13px;font-size:14px;outline:0}.toolbar select{width:190px}
+.wrap{overflow-x:auto}.card{overflow:hidden}table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:15px 16px;text-align:left;border-bottom:1px solid #eef0f3;font-size:14px}th{background:#fafafa;color:#4b5563;font-size:13px}.id{font-weight:800;color:#30255d}.service{font-weight:600}.small{display:block;color:#8a919d;font-size:12px;margin-top:4px}
+.status{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}.pending{background:#fff3cd;color:#856404}.processing{background:#dbeafe;color:#1d4ed8}.completed{background:#dcfce7;color:#166534}.cancelled{background:#fee2e2;color:#991b1b}
+.view{border:1px solid #d1d5db;background:#fff;padding:7px 11px;border-radius:7px;cursor:pointer}.view:hover{background:#f5f3ff}
+.empty{text-align:center;padding:55px 20px;color:#6b7280}.empty b{display:block;color:#333;margin-bottom:6px}.empty .icon{font-size:40px;margin-bottom:8px}
+.footer{display:flex;justify-content:space-between;align-items:center;padding:15px 16px;color:#6b7280;font-size:13px;border-top:1px solid #eef0f3}.pages{display:flex;gap:7px}.pages button{border:1px solid #d1d5db;background:#fff;min-width:34px;height:34px;border-radius:7px;cursor:pointer}.pages button.active{background:#30255d;color:#fff}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);align-items:center;justify-content:center;padding:20px;z-index:100}.modal.show{display:flex}.box{width:100%;max-width:560px;background:#fff;border-radius:14px;padding:22px}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.head h2{margin:0;font-size:21px}.close{border:0;background:#f3f4f6;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:18px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.detail{background:#f8fafc;border-radius:9px;padding:12px}.full{grid-column:1/-1}.detail label{display:block;color:#6b7280;font-size:12px;margin-bottom:5px}.detail strong{font-size:14px}
+@media(max-width:800px){.stats{grid-template-columns:1fr 1fr}}@media(max-width:520px){.topbar{padding:0 14px}.container{padding:20px 12px}.toolbar{flex-direction:column}.toolbar select{width:100%}.grid{grid-template-columns:1fr}.full{grid-column:auto}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">LOC STAR</div>
+  <button class="back" onclick="location.href='index.html'">← Về trang chủ</button>
+</header>
+
+<main class="container">
+  <h1>Quản lý đơn hàng</h1>
+  <div class="sub">Theo dõi và tra cứu các đơn hàng của bạn</div>
+
+  <section class="stats">
+    <div class="stat"><div class="label">Tổng đơn hàng</div><div class="value" id="total">0</div></div>
+    <div class="stat"><div class="label">Đang xử lý</div><div class="value" id="processing">0</div></div>
+    <div class="stat"><div class="label">Hoàn thành</div><div class="value" id="completed">0</div></div>
+    <div class="stat"><div class="label">Đã hủy</div><div class="value" id="cancelled">0</div></div>
+  </section>
+
+  <section class="toolbar">
+    <div class="search"><input id="search" placeholder="🔍 Tìm mã đơn hoặc tên dịch vụ..."></div>
+    <select id="filter">
+      <option value="all">Tất cả trạng thái</option>
+      <option value="pending">Chờ xử lý</option>
+      <option value="processing">Đang xử lý</option>
+      <option value="completed">Hoàn thành</option>
+      <option value="cancelled">Đã hủy</option>
+    </select>
+  </section>
+
+  <section class="card">
+    <div class="wrap">
+      <table>
+        <thead><tr><th>Mã đơn</th><th>Dịch vụ</th><th>Số lượng</th><th>Tổng tiền</th><th>Ngày đặt</th><th>Trạng thái</th><th>Chi tiết</th></tr></thead>
+        <tbody id="body"></tbody>
+      </table>
+    </div>
+    <div id="empty" class="empty" style="display:none"><div class="icon">📦</div><b>Không tìm thấy đơn hàng</b>Hãy thử đổi từ khóa hoặc trạng thái.</div>
+    <div class="footer"><span id="count">0 đơn hàng</span><div class="pages"><button onclick="page(-1)">‹</button><button id="pageNo" class="active">1/1</button><button onclick="page(1)">›</button></div></div>
+  </section>
+</main>
+
+<div id="modal" class="modal" onclick="closeModal(event)">
+  <div class="box" onclick="event.stopPropagation()">
+    <div class="head"><h2>Chi tiết đơn hàng</h2><button class="close" onclick="hide()">×</button></div>
+    <div id="details"></div>
+  </div>
+</div>
+
+<script>
+function loadOrders() {
+    const saved = JSON.parse(localStorage.getItem("orders") || "[]");
+    const username = localStorage.getItem("username");
+
+    // Chuyển dữ liệu từ trang đặt đơn sang đúng dạng của trang quản lý.
+    return saved
+        .filter(o => !username || !o.username || o.username === username)
+        .map(o => {
+            let status = "pending";
+            let statusText = o.status || "Chờ xử lý";
+
+            if (o.status === "Hoàn thành") {
+                status = "completed";
+                statusText = "Hoàn thành";
+            } else if (o.status === "Đang xử lý") {
+                status = "processing";
+                statusText = "Đang xử lý";
+            } else if (o.status === "Đã hủy") {
+                status = "cancelled";
+                statusText = "Đã hủy";
+            }
+
+            return {
+                id: o.id || ("LOC" + Date.now()),
+                service: o.service || "Không xác định",
+                quantity: Number(o.quantity || 0).toLocaleString("vi-VN"),
+                amount: Number(o.total || 0),
+                date: o.time || "",
+                status: status,
+                statusText: statusText,
+                customer: o.username || username || "Khách",
+                link: o.link || "",
+                platform: o.platform || "",
+                price: Number(o.price || 0),
+                note: o.note || ""
+            };
+        })
+        .reverse();
+}
+
+let orders = loadOrders();
+let current=1;const perPage=8;
+let current=1;const perPage=8;
+const money=n=>Number(n).toLocaleString("vi-VN")+"đ";
+const esc=s=>String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+
+function filtered(){
+ const q=document.getElementById("search").value.toLowerCase().trim(), f=document.getElementById("filter").value;
+ return orders.filter(o=>(!q||o.id.toLowerCase().includes(q)||o.service.toLowerCase().includes(q)||o.customer.toLowerCase().includes(q))&&(f==="all"||o.status===f));
+}
+function stats(){
+ total.textContent=orders.length;
+ processing.textContent=orders.filter(o=>o.status==="processing"||o.status==="pending").length;
+ completed.textContent=orders.filter(o=>o.status==="completed").length;
+ cancelled.textContent=orders.filter(o=>o.status==="cancelled").length;
+}
+
+function refreshOrders(){
+    orders = loadOrders();
+    stats();
+    render();
+}
+
+window.addEventListener("storage", refreshOrders);
+window.addEventListener("pageshow", refreshOrders);
+function render(){
+ const list=filtered(), pages=Math.max(1,Math.ceil(list.length/perPage)); if(current>pages)current=pages;
+ const rows=list.slice((current-1)*perPage,current*perPage); body.innerHTML="";
+ empty.style.display=rows.length?"none":"block";
+ rows.forEach(o=>{body.innerHTML+=`<tr><td><span class="id">${esc(o.id)}</span></td><td><span class="service">${esc(o.service)}</span><span class="small">Khách: ${esc(o.customer)}</span></td><td>${esc(o.quantity)}</td><td><b>${money(o.amount)}</b></td><td>${esc(o.date)}</td><td><span class="status ${o.status}">${esc(o.statusText)}</span></td><td><button class="view" onclick="show('${o.id}')">Xem</button></td></tr>`});
+ count.textContent=list.length+" đơn hàng"; pageNo.textContent=current+"/"+pages;
+}
+function page(d){current+=d;const pages=Math.max(1,Math.ceil(filtered().length/perPage));if(current<1)current=1;if(current>pages)current=pages;render()}
+function show(id){
+ const o=orders.find(x=>x.id===id);if(!o)return;
+ details.innerHTML=`<div class="grid">
+ <div class="detail"><label>Mã đơn</label><strong>${esc(o.id)}</strong></div>
+ <div class="detail"><label>Trạng thái</label><span class="status ${o.status}">${esc(o.statusText)}</span></div>
+ <div class="detail full"><label>Dịch vụ</label><strong>${esc(o.service)}</strong></div>
+ <div class="detail"><label>Số lượng</label><strong>${esc(o.quantity)}</strong></div>
+ <div class="detail"><label>Tổng tiền</label><strong>${money(o.amount)}</strong></div>
+ <div class="detail"><label>Khách hàng</label><strong>${esc(o.customer)}</strong></div>
+ <div class="detail"><label>Thời gian đặt</label><strong>${esc(o.date)}</strong></div>
+ <div class="detail"><label>Nền tảng</label><strong>${esc(o.platform || "—")}</strong></div>
+ <div class="detail"><label>Đơn giá</label><strong>${money(o.price || 0)} / 1000</strong></div>
+ <div class="detail full"><label>Link mục tiêu</label><a href="${esc(o.link || "#")}" target="_blank" rel="noopener">${esc(o.link || "—")}</a></div>
+ <div class="detail full"><label>Ghi chú</label><strong>${esc(o.note || "Không có")}</strong></div>
+ </div>`;
+ modal.classList.add("show");
+}
+function hide(){modal.classList.remove("show")}
+function closeModal(e){if(e.target===modal)hide()}
+search.addEventListener("input",()=>{current=1;render()});filter.addEventListener("change",()=>{current=1;render()});
+stats();render();
+</script>
+</body>
+</html>

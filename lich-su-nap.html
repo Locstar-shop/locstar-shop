@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Lịch sử nạp tiền - LOC STAR</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f1f3f8;
+    margin: 0;
+    padding: 30px;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #34265f;
+}
+
+.deposit {
+    background: #f7f7fb;
+    padding: 18px;
+    margin-top: 15px;
+    border-radius: 10px;
+    border-left: 5px solid #20bf55;
+}
+
+.amount {
+    font-size: 20px;
+    font-weight: bold;
+    color: #34265f;
+}
+
+.status {
+    color: #e69500;
+    font-weight: bold;
+}
+
+.back {
+    display: inline-block;
+    margin-top: 25px;
+    text-decoration: none;
+    color: #34265f;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>📋 Lịch sử nạp tiền</h1>
+
+<div id="depositList"></div>
+
+<a class="back" href="index.html">
+    ← Quay lại trang chủ
+</a>
+
+</div>
+
+<script>
+
+const deposits =
+    JSON.parse(localStorage.getItem("deposits")) || [];
+
+const list =
+    document.getElementById("depositList");
+
+if (deposits.length === 0) {
+
+    list.innerHTML =
+        "<p style='text-align:center;'>Chưa có giao dịch nạp tiền.</p>";
+
+} else {
+
+    deposits.reverse().forEach(function(deposit) {
+
+        list.innerHTML += `
+
+        <div class="deposit">
+
+            <div class="amount">
+                ${deposit.amount.toLocaleString("vi-VN")}đ
+            </div>
+
+            <p>
+                <b>Tài khoản:</b>
+                ${deposit.username}
+            </p>
+
+            <p>
+                <b>Nội dung:</b>
+                ${deposit.content}
+            </p>
+
+            <p>
+                <b>Thời gian:</b>
+                ${deposit.time}
+            </p>
+
+            <p>
+                <b>Trạng thái:</b>
+                <span class="status">
+                    ${deposit.status}
+                </span>
+            </p>
+
+        </div>
+
+        `;
+
+    });
+}
+
+</script>
+
+</body>
+</html>

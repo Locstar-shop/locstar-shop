@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Quản lý đơn hàng - LOC STAR</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f1f3f8;
+    margin: 0;
+    padding: 30px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #34265f;
+    margin-bottom: 10px;
+}
+
+.welcome {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.top-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.top-buttons a {
+    flex: 1;
+    text-align: center;
+    padding: 13px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+.btn-order {
+    background: #34265f;
+}
+
+.btn-deposit {
+    background: #20bf55;
+}
+
+.order {
+    background: #f7f7fb;
+    border-left: 5px solid #5865f2;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+}
+
+.order h3 {
+    color: #34265f;
+    margin-top: 0;
+}
+
+.order p {
+    margin: 10px 0;
+    line-height: 1.5;
+}
+
+.status {
+    display: inline-block;
+    background: #fff3cd;
+    color: #d88900;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.note {
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    color: #555;
+}
+
+.empty {
+    text-align: center;
+    padding: 50px;
+    color: #777;
+}
+
+.back {
+    display: inline-block;
+    margin-top: 20px;
+    color: #34265f;
+    text-decoration: none;
+}
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    .top-buttons {
+        flex-direction: column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🧾 Quản lý đơn hàng</h1>
+
+<div class="welcome" id="welcome"></div>
+
+<div class="top-buttons">
+
+    <a class="btn-order" href="dat-don.html">
+        🛒 Đặt đơn mới
+    </a>
+
+    <a class="btn-deposit" href="nap-tien.html">
+        💳 Nạp tiền
+    </a>
+
+</div>
+
+<div id="orderList"></div>
+
+<a class="back" href="index.html">
+    ← Quay lại trang chủ
+</a>
+
+</div>
+
+
+<script>
+
+const username = localStorage.getItem("username");
+
+
+/* =========================
+   KIỂM TRA ĐĂNG NHẬP
+========================= */
+
+if (!username) {
+
+    alert("Vui lòng đăng nhập để xem đơn hàng!");
+
+    window.location.href = "login.html";
+
+}
+
+
+/* =========================
+   HIỂN THỊ TÊN TÀI KHOẢN
+========================= */
+
+document.getElementById("welcome").textContent =
+    "Tài khoản: " + username;
+
+
+/* =========================
+   LẤY DANH SÁCH ĐƠN
+========================= */
+
+let allOrders =
+    JSON.parse(localStorage.getItem("orders")) || [];
+
+
+/* =========================
+   CHỈ LẤY ĐƠN CỦA TÀI KHOẢN
+========================= */
+
+let orders = allOrders.filter(function(order) {
+
+    return order.username === username;
+
+});
+
+
+const orderList =
+    document.getElementById("orderList");
+
+
+/* =========================
+   KHÔNG CÓ ĐƠN
+========================= */
+
+if (orders.length === 0) {
+
+    orderList.innerHTML = `
+        <div class="empty">
+
+            <h2>📭 Chưa có đơn hàng</h2>
+
+            <p>
+                Các đơn hàng bạn đặt sẽ xuất hiện ở đây.
+            </p>
+
+        </div>
+    `;
+
+}
+
+
+/* =========================
+   CÓ ĐƠN HÀNG
+========================= */
+
+else {
+
+    orders.reverse();
+
+    orders.forEach(function(order, index) {
+
+        const total =
+            Number(order.total) || 0;
+
+        const status =
+            order.status || "Chờ xử lý";
+
+        orderList.innerHTML += `
+
+            <div class="order">
+
+                <h3>
+                    🧾 Đơn hàng #${order.id || (orders.length - index)}
+                </h3>
+
+                <p>
+                    <b>Mã đơn:</b>
+                    ${order.id || "Chưa có"}
+                </p>
+
+                <p>
+                    <b>Nền tảng:</b>
+                    ${order.platform || "Chưa xác định"}
+                </p>
+
+                <p>
+                    <b>Dịch vụ:</b>
+                    ${order.service || "Chưa xác định"}
+                </p>
+
+                <p>
+                    <b>Link:</b>
+                    ${order.link || "Chưa có"}
+                </p>
+
+                <p>
+                    <b>Số lượng:</b>
+                    ${(Number(order.quantity) || 0).toLocaleString("vi-VN")}
+                </p>
+
+                <p>
+                    <b>Tổng tiền:</b>
+                    ${total.toLocaleString("vi-VN")}đ
+                </p>
+
+                <p>
+                    <b>Thời gian:</b>
+                    ${order.time || "Chưa có"}
+                </p>
+
+                <p>
+                    <b>Trạng thái:</b>
+
+                    <span class="status">
+                        ⏳ ${status}
+                    </span>
+
+                </p>
+
+                ${
+                    order.note
+                    ?
+                    `
+                    <p>
+                        <b>Ghi chú:</b>
+                    </p>
+
+                    <div class="note">
+                        ${order.note}
+                    </div>
+                    `
+                    :
+                    ""
+                }
+
+            </div>
+
+        `;
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>

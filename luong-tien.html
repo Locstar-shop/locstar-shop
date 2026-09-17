@@ -1,0 +1,213 @@
+from pathlib import Path
+
+html = r'''<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luồng tiền - LOC STAR</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f6fb;color:#222}
+.topbar{height:72px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:10}
+.brand{font-size:25px;font-weight:800;color:#30255d}
+.back{border:0;background:#30255d;color:#fff;padding:11px 18px;border-radius:8px;cursor:pointer}
+.container{max-width:1200px;margin:auto;padding:28px 20px 50px}
+h1{margin:0;font-size:28px}.sub{color:#6b7280;margin-top:7px;font-size:14px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:22px 0}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.label{font-size:14px;color:#6b7280;margin-bottom:9px}.value{font-size:25px;font-weight:800;color:#30255d}
+.green{color:#15803d}.red{color:#dc2626}
+.section{background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04);margin-bottom:20px}
+.section-head{padding:18px 20px;border-bottom:1px solid #eef0f3;display:flex;justify-content:space-between;align-items:center}
+.section-head h2{margin:0;font-size:19px}.muted{color:#6b7280;font-size:13px}
+table{width:100%;border-collapse:collapse;min-width:720px}
+th,td{padding:15px 18px;text-align:left;border-bottom:1px solid #eef0f3;font-size:14px}
+th{background:#fafafa;color:#6b7280;font-size:13px}
+.type{font-weight:700}.deposit{color:#15803d}.spend{color:#dc2626}
+.badge{display:inline-block;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:700}
+.badge.deposit{background:#dcfce7}.badge.spend{background:#fee2e2}
+.empty{text-align:center;padding:45px 20px;color:#6b7280}.empty .icon{font-size:38px;margin-bottom:8px}
+.wrap{overflow-x:auto}
+.notice{padding:15px 18px;background:#fff7ed;border-bottom:1px solid #fed7aa;color:#9a3412;font-size:13px}
+.actions{display:flex;gap:10px}.btn{border:0;padding:10px 14px;border-radius:8px;cursor:pointer}.reload{background:#eee;color:#333}
+@media(max-width:800px){.cards{grid-template-columns:1fr}.topbar{padding:0 14px}.container{padding:20px 12px}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">LOC STAR</div>
+  <button class="back" onclick="location.href='index.html'">← Về trang chủ</button>
+</header>
+
+<main class="container">
+  <h1>Luồng tiền</h1>
+  <div class="sub">Theo dõi tiền nạp, tiền đã sử dụng và số dư hiện tại</div>
+
+  <section class="cards">
+    <div class="card">
+      <div class="label">💰 Số dư hiện tại</div>
+      <div class="value" id="balance">0đ</div>
+    </div>
+    <div class="card">
+      <div class="label">⬆️ Tổng tiền đã nạp</div>
+      <div class="value green" id="deposited">0đ</div>
+    </div>
+    <div class="card">
+      <div class="label">⬇️ Tổng tiền đã sử dụng</div>
+      <div class="value red" id="spent">0đ</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <h2>Lịch sử giao dịch</h2>
+        <div class="muted" id="count">0 giao dịch</div>
+      </div>
+      <div class="actions"><button class="btn reload" onclick="refresh()">↻ Làm mới</button></div>
+    </div>
+    <div class="notice">
+      ℹ️ Trang này lấy dữ liệu từ bộ nhớ của website hiện tại: tiền nạp và các đơn hàng đã đặt.
+    </div>
+    <div class="wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Thời gian</th>
+            <th>Nội dung</th>
+            <th>Loại</th>
+            <th>Số tiền</th>
+            <th>Số dư sau giao dịch</th>
+          </tr>
+        </thead>
+        <tbody id="transactions"></tbody>
+      </table>
+    </div>
+    <div id="empty" class="empty" style="display:none">
+      <div class="icon">💳</div>
+      Chưa có giao dịch nào.
+    </div>
+  </section>
+</main>
+
+<script>
+function money(n){
+  return Number(n||0).toLocaleString("vi-VN")+"đ";
+}
+function getJSON(key, fallback=[]){
+  try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback));}
+  catch(e){return fallback;}
+}
+function currentUser(){
+  return localStorage.getItem("username") || "";
+}
+function getDeposits(){
+  const keys=["deposits","napTien","nap_tien","depositHistory","transactions"];
+  let all=[];
+  keys.forEach(k=>{
+    const v=getJSON(k,[]);
+    if(Array.isArray(v)) all=all.concat(v);
+  });
+  return all;
+}
+function readAmount(o){
+  return Number(o.amount ?? o.money ?? o.total ?? o.price ?? o.value ?? 0);
+}
+function readTime(o){
+  return o.time || o.date || o.createdAt || o.created_at || "";
+}
+function loadTransactions(){
+  const username=currentUser();
+  const result=[];
+
+  // Tiền nạp: chỉ lấy các bản ghi có dấu hiệu là giao dịch nạp tiền.
+  getDeposits().forEach((o,i)=>{
+    if(typeof o!=="object" || !readAmount(o)) return;
+    if(username && o.username && o.username!==username) return;
+
+    const status=String(o.status||o.state||"").toLowerCase();
+    if(status.includes("hủy") || status.includes("cancel")) return;
+
+    result.push({
+      time:readTime(o),
+      text:"Nạp tiền",
+      kind:"deposit",
+      amount:readAmount(o),
+      key:"d"+i
+    });
+  });
+
+  // Tiền sử dụng: lấy từ đơn hàng.
+  getJSON("orders",[]).forEach((o,i)=>{
+    if(typeof o!=="object") return;
+    if(username && o.username && o.username!==username) return;
+    const amount=Number(o.total||o.amount||0);
+    if(!amount) return;
+    result.push({
+      time:readTime(o),
+      text:(o.service||"Đặt dịch vụ")+" "+(o.id||""),
+      kind:"spend",
+      amount:amount,
+      key:"o"+i
+    });
+  });
+
+  result.sort((a,b)=>String(b.time).localeCompare(String(a.time)));
+  return result;
+}
+function refresh(){
+  const tx=loadTransactions();
+  let deposits=tx.filter(x=>x.kind==="deposit").reduce((s,x)=>s+x.amount,0);
+  let spent=tx.filter(x=>x.kind==="spend").reduce((s,x)=>s+x.amount,0);
+  let balance=deposits-spent;
+
+  document.getElementById("balance").textContent=money(balance);
+  document.getElementById("deposited").textContent=money(deposits);
+  document.getElementById("spent").textContent=money(spent);
+  document.getElementById("count").textContent=tx.length+" giao dịch";
+
+  const tbody=document.getElementById("transactions");
+  const empty=document.getElementById("empty");
+  tbody.innerHTML="";
+
+  if(!tx.length){
+    empty.style.display="block";
+    return;
+  }
+  empty.style.display="none";
+
+  // Tính số dư theo thứ tự thời gian cũ -> mới, rồi gắn lại số dư sau từng giao dịch.
+  const chronological=[...tx].reverse();
+  let running=0;
+  const balances={};
+  chronological.forEach(x=>{
+    running += x.kind==="deposit" ? x.amount : -x.amount;
+    balances[x.key]=running;
+  });
+
+  tx.forEach(x=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=
+      "<td>"+escapeHTML(x.time||"—")+"</td>"+
+      "<td><span class='type'>"+escapeHTML(x.text)+"</span></td>"+
+      "<td><span class='badge "+x.kind+"'>"+(x.kind==="deposit"?"Tiền vào":"Tiền ra")+"</span></td>"+
+      "<td class='"+x.kind+"'><b>"+(x.kind==="deposit"?"+":"-")+money(x.amount)+"</b></td>"+
+      "<td><b>"+money(balances[x.key])+"</b></td>";
+    tbody.appendChild(tr);
+  });
+}
+function escapeHTML(s){
+  return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+}
+window.addEventListener("storage",refresh);
+window.addEventListener("pageshow",refresh);
+refresh();
+</script>
+</body>
+</html>'''
+
+path = Path("/mnt/data/luong-tien.html")
+path.write_text(html, encoding="utf-8")
+print(path)
