@@ -66,7 +66,8 @@ app.get("/api/config/public", (_req, res) => {
     accountOwner: BANK_OWNER
   });
 });
-
+// Đọc JSON cho các API đăng ký/đăng nhập
+app.use(express.json());
 // ========================================
 // ĐĂNG KÝ TÀI KHOẢN
 // ========================================
@@ -651,11 +652,7 @@ app.post(
   }
 );
 
-// ========================================
-// JSON API
-// ========================================
 
-app.use(express.json());
 
 // ========================================
 // START SERVER
