@@ -978,7 +978,153 @@ app.post(
   }
 );
 
+// ========================================
+// XÁC THỰC JWT
+// ========================================
 
+function authenticateToken(req, res, next) {
+
+  const authHeader =
+    req.get("Authorization") || "";
+
+  const token =
+    authHeader.startsWith("Bearer ")
+      ? authHeader.slice(7).trim()
+      : "";
+
+  if (!token) {
+    return res.status(401).json({
+      success: false,
+      message: "Chưa đăng nhập"
+    });
+  }
+
+  if (!JWT_SECRET) {
+    return res.status(500).json({
+      success: false,
+      message: "JWT secret is not configured"
+    });
+  }
+
+  try {
+
+    const decoded =
+      jwt.verify(token, JWT_SECRET);
+
+    req.user = decoded;
+
+    next();
+
+  } catch (err) {
+
+    return res.status(401).json({
+      success: false,
+      message: "Phiên đăng nhập đã hết hạn"
+    });
+
+  }
+}
+
+
+// ========================================
+// THÔNG TIN TÀI KHOẢN
+// ========================================
+
+app.get(
+  "/api/account/me",
+  authenticateToken,
+  async (req, res) => {
+
+    try {
+
+      if (!supabase) {
+        return res.status(500).json({
+          success: false,
+          message: "Database is not configured"
+        });
+      }
+
+
+      const {
+        data: user,
+        error
+      } = await supabase
+        .from("app_users")
+        .select(
+          "id, username, email, balance, deposit_code"
+        )
+        .eq(
+          "id",
+          req.user.userId
+        )
+        .maybeSingle();
+
+
+      if (error) {
+
+        console.error(
+          "Account error:",
+          error
+        );
+
+        return res.status(500).json({
+          success: false,
+          message:
+            "Không thể lấy thông tin tài khoản"
+        });
+      }
+
+
+      if (!user) {
+
+        return res.status(404).json({
+          success: false,
+          message:
+            "Không tìm thấy tài khoản"
+        });
+      }
+
+
+      return res.status(200).json({
+
+        success: true,
+
+        user: {
+
+          id: user.id,
+
+          username:
+            user.username,
+
+          email:
+            user.email,
+
+          balance:
+            Number(user.balance || 0),
+
+          depositCode:
+            user.deposit_code
+
+        }
+
+      });
+
+
+    } catch (err) {
+
+      console.error(
+        "Account API error:",
+        err
+      );
+
+      return res.status(500).json({
+        success: false,
+        message:
+          "Lỗi máy chủ"
+      });
+    }
+  }
+);
 // ========================================
 // START SERVER
 // ========================================
