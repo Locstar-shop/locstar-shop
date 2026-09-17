@@ -98,14 +98,7 @@ app.post(
         });
       }
 
-      if (!supabase) {
-        return res.status(500).json({
-          success: false,
-          message:
-            "Database is not configured"
-        });
-      }
-
+      
 
       // ----------------------------
       // Đọc header SePay
