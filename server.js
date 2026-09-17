@@ -88,7 +88,7 @@ app.post(
   }),
   async (req, res) => {
 console.log("=== SEPAY WEBHOOK RECEIVED ===");
-console.log("BODY:", req.body);
+console.log("BODY:", req.body.toString("utf8"));
     try {
 
       if (!SEPAY_WEBHOOK_SECRET) {
