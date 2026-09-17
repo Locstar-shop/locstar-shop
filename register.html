@@ -83,12 +83,23 @@ input:focus {
     background: #2568c7;
 }
 
+.btn-register:disabled {
+    background: #999;
+    cursor: not-allowed;
+}
+
 .back {
     display: block;
     text-align: center;
     margin-top: 20px;
     color: #347ee8;
     text-decoration: none;
+}
+
+.message {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: bold;
 }
 </style>
 </head>
@@ -108,20 +119,53 @@ input:focus {
         <form onsubmit="registerAccount(event)">
 
             <label>Tên tài khoản</label>
-            <input type="text" id="username" placeholder="Nhập tên tài khoản" required>
+            <input
+                type="text"
+                id="username"
+                placeholder="Nhập tên tài khoản"
+                minlength="3"
+                maxlength="30"
+                required
+            >
 
             <label>Email</label>
-            <input type="email" id="email" placeholder="Nhập email" required>
+            <input
+                type="email"
+                id="email"
+                placeholder="Nhập email"
+                required
+            >
 
             <label>Mật khẩu</label>
-            <input type="password" id="password" placeholder="Nhập mật khẩu" required>
+            <input
+                type="password"
+                id="password"
+                placeholder="Nhập mật khẩu"
+                minlength="6"
+                required
+            >
 
             <label>Xác nhận mật khẩu</label>
-            <input type="password" id="confirm" placeholder="Nhập lại mật khẩu" required>
+            <input
+                type="password"
+                id="confirm"
+                placeholder="Nhập lại mật khẩu"
+                minlength="6"
+                required
+            >
 
-            <button class="btn-register" type="submit">
+            <button
+                class="btn-register"
+                id="registerButton"
+                type="submit"
+            >
                 ĐĂNG KÝ
             </button>
+
+            <div
+                class="message"
+                id="message"
+            ></div>
 
         </form>
 
@@ -134,31 +178,113 @@ input:focus {
 </div>
 
 <script>
-function registerAccount(event) {
+const API_URL = "https://locstar-shop-api.onrender.com";
+
+async function registerAccount(event) {
     event.preventDefault();
 
-    let username = document.getElementById("username").value;
-    let email = document.getElementById("email").value;
-    let password = document.getElementById("password").value;
-    let confirm = document.getElementById("confirm").value;
+    const username =
+        document.getElementById("username").value.trim();
+
+    const email =
+        document.getElementById("email").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    const confirm =
+        document.getElementById("confirm").value;
+
+    const button =
+        document.getElementById("registerButton");
+
+    const message =
+        document.getElementById("message");
+
+    message.textContent = "";
+    message.style.color = "";
 
     if (password !== confirm) {
-        alert("Mật khẩu xác nhận không giống nhau!");
+        message.textContent =
+            "Mật khẩu xác nhận không giống nhau!";
+        message.style.color = "red";
         return;
     }
 
     if (password.length < 6) {
-        alert("Mật khẩu phải có ít nhất 6 ký tự!");
+        message.textContent =
+            "Mật khẩu phải có ít nhất 6 ký tự!";
+        message.style.color = "red";
         return;
     }
 
-    localStorage.setItem("username", username);
-    localStorage.setItem("email", email);
-    localStorage.setItem("password", password);
+    button.disabled = true;
+    button.textContent = "ĐANG ĐĂNG KÝ...";
 
-    alert("Đăng ký thành công!");
+    try {
+        const response = await fetch(
+            `${API_URL}/api/auth/register`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username,
+                    email,
+                    password
+                })
+            }
+        );
 
-    window.location.href = "index.html";
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(
+                data.message ||
+                "Đăng ký thất bại"
+            );
+        }
+
+        // Chỉ lưu thông tin không nhạy cảm.
+        // KHÔNG lưu mật khẩu.
+        localStorage.setItem(
+            "username",
+            data.user.username
+        );
+
+        localStorage.setItem(
+            "email",
+            data.user.email
+        );
+
+        if (data.token) {
+            localStorage.setItem(
+                "auth_token",
+                data.token
+            );
+        }
+
+        alert(
+            "Đăng ký tài khoản thành công!"
+        );
+
+        window.location.href =
+            "index.html";
+
+    } catch (error) {
+
+        console.error(error);
+
+        message.textContent =
+            error.message ||
+            "Không thể kết nối máy chủ.";
+
+        message.style.color = "red";
+
+        button.disabled = false;
+        button.textContent = "ĐĂNG KÝ";
+    }
 }
 </script>
 
