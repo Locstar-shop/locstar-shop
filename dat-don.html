@@ -2,1014 +2,282 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Đặt đơn - LOC STAR</title>
-
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tăng Like bài viết - LOC STAR</title>
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f1f3f8;
-    margin: 0;
-    padding: 30px;
+:root{
+ --purple:#352661;--purple2:#5b55e8;--bg:#f3f6fc;--text:#18244d;
+ --muted:#68728b;--line:#dfe5f1;--blue:#3187f6;--green:#21bd75;
 }
-
-.container {
-    max-width: 850px;
-    margin: auto;
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-}
-
-h1 {
-    text-align: center;
-    color: #34265f;
-}
-
-label {
-    display: block;
-    margin-top: 18px;
-    font-weight: bold;
-}
-
-select,
-input,
-textarea {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 13px;
-    margin-top: 8px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 15px;
-}
-
-.price-box {
-    margin-top: 20px;
-    padding: 18px;
-    background: #f1f3f8;
-    border-radius: 10px;
-}
-
-.total {
-    font-size: 24px;
-    font-weight: bold;
-    color: #34265f;
-}
-
-button {
-    width: 100%;
-    padding: 15px;
-    margin-top: 20px;
-    border: none;
-    border-radius: 8px;
-    background: #20bf55;
-    color: white;
-    font-size: 17px;
-    cursor: pointer;
-}
-
-button:hover {
-    opacity: 0.9;
-}
-
-.back {
-    display: block;
-    margin-top: 20px;
-    color: #34265f;
-    text-decoration: none;
-}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+button,input,textarea{font:inherit}
+.top{height:72px;background:#fff;border-bottom:1px solid #e9edf5;display:flex;align-items:center;padding:0 28px;gap:24px;position:sticky;top:0;z-index:5}
+.logo{width:220px;font-size:27px;font-weight:900;letter-spacing:.5px}
+.logo span{color:#f3b91f}.hamb{font-size:25px;color:#50607c}
+.search{width:360px;border:0;background:#f5f7fb;border-radius:8px;padding:12px 18px;color:#6d7890;outline:none}
+.top-spacer{flex:1}.support{background:#22bf76;color:#fff;border:0;border-radius:6px;padding:11px 18px;font-weight:700}
+.top-icon{font-size:20px;color:#3c4965}.avatar{width:40px;height:40px;border-radius:50%;background:#ffd5ea;display:grid;place-items:center}
+.layout{display:flex;min-height:calc(100vh - 72px)}
+.sidebar{width:280px;background:var(--purple);color:#fff;padding:25px 15px;flex:none;overflow:auto}
+.side-title{font-size:13px;color:#c8bde8;font-weight:700;margin:5px 10px 18px}
+.platform{display:flex;align-items:center;gap:12px;padding:10px 12px;font-weight:700}
+.fb{width:30px;height:30px;border-radius:50%;background:#1877f2;display:grid;place-items:center;font-weight:900}
+.chev{margin-left:auto;color:#c9c0e8}.side-item{padding:11px 16px;margin:2px 0;color:#d9d1f0;border-radius:7px;font-size:14px;line-height:1.25;cursor:pointer}
+.side-item.active{background:linear-gradient(90deg,#5d50df,#4e46bd);color:#fff;font-weight:700}
+.main{flex:1;padding:28px 34px;max-width:1250px}
+.heading{display:flex;justify-content:space-between;align-items:center;margin:5px 0 24px}
+.title{font-size:21px;font-weight:800}.crumb{color:#69748e;font-size:14px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:20px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:7px;padding:20px}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line);margin-bottom:20px}
+.tab{padding:14px 10px;text-align:center;font-size:14px;cursor:pointer}
+.tab.active{color:var(--purple2);border:1px solid var(--line);border-bottom:2px solid #fff;border-radius:6px 6px 0 0;margin-bottom:-1px;font-weight:700}
+.card{background:#fbfcfe;border-radius:12px;padding:18px}
+.section-title{font-size:16px;font-weight:800;margin:4px 0 13px}
+.services{display:flex;flex-direction:column}
+.service{display:grid;grid-template-columns:24px 74px minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px 4px;border-bottom:1px solid #edf0f6;cursor:pointer}
+.service:last-child{border-bottom:0}
+.service input{width:18px;height:18px;accent-color:#5a55e9}
+.code{font-size:13px;font-weight:700}
+.name{font-size:14px;color:#5148dd;font-weight:700;line-height:1.3}
+.rate{background:#5a55e9;color:#fff;padding:5px 9px;border-radius:6px;font-size:12px;font-weight:800;white-space:nowrap}
+.server-note{display:none;margin:15px 0 8px;border-left:4px solid #15a9aa;background:#e8f9f8;padding:12px 14px;border-radius:4px}
+.server-note.show{display:block}
+.note-row{margin:5px 0;padding:7px 10px;border-radius:7px}.note-row.blue{background:#dfeeff}.note-row.green{background:#d8efe3}.note-row.yellow{background:#fff0c9}.note-row.red{background:#f8d9dc}.note-row.purple{background:#e9ddfb}
+.field{margin-top:18px}.label{font-weight:800;font-size:14px;margin-bottom:8px}
+.inputline{display:flex}.inputline input{flex:1;min-width:0;border:1px solid #d9dfeb;border-radius:6px 0 0 6px;padding:13px;outline:none}.paste{border:0;background:#448cf2;color:#fff;padding:0 18px;font-weight:700;border-radius:0 6px 6px 0;cursor:pointer}
+.quantity{width:100%;padding:13px;border:1px solid #d9dfeb;border-radius:6px;outline:none}
+.totalbox{margin-top:18px;background:#fff;border:1px solid #d9dfeb;border-radius:6px;display:flex;align-items:center;overflow:hidden}
+.totalbox .amount{flex:1;padding:13px;font-size:18px;font-weight:800}.unit{padding:13px;border-left:1px solid #d9dfeb;color:#56627c;font-size:13px}
+textarea{width:100%;min-height:90px;border:1px solid #d9dfeb;border-radius:6px;padding:13px;resize:vertical;outline:none}
+.toggle{display:flex;align-items:center;gap:10px;margin:14px 0;font-size:14px}.switch{width:32px;height:18px;border-radius:20px;background:#d8dfeb;position:relative}.switch:after{content:"";position:absolute;width:14px;height:14px;left:2px;top:2px;background:#fff;border-radius:50%}
+.order{width:100%;margin-top:8px;border:0;background:var(--purple2);color:#fff;padding:14px;border-radius:6px;font-weight:800;cursor:pointer}.order:disabled{opacity:.55;cursor:not-allowed}
+.loginbox{margin-top:10px;background:#dceeff;border-radius:8px;padding:16px;text-align:center;color:#2877dc;font-size:14px;line-height:1.45}.login-actions{display:flex;gap:10px;justify-content:center;margin-top:12px}.login-actions button{border:0;border-radius:6px;padding:10px 18px;font-weight:700;cursor:pointer}.login{background:#fff;color:#3e70db}.register{background:#348bf1;color:#fff}
+.side-card{background:#fff;border:1px solid var(--line);border-radius:7px;padding:16px}.side-head{background:#f1f5ff;border-radius:7px;padding:13px;font-weight:800;margin-bottom:14px}.summary-row{display:grid;grid-template-columns:90px 1fr;gap:10px;align-items:center;margin:12px 0}.summary-label{font-weight:700;font-size:14px}.summary-value{background:#f3f7ff;border:1px solid #e0e8f5;border-radius:7px;padding:11px;color:#60708d}.summary-total{background:#fff0f3;border-radius:8px;padding:15px;text-align:right;color:#e63d58;font-weight:900;font-size:22px}.balance{font-size:12px;color:#e63d58;margin-top:4px}
+.notice{margin-top:18px;background:#fff8d9;border:1px solid #f2df91;padding:14px;border-radius:7px;text-align:center;font-weight:700}
+.empty{padding:22px;text-align:center;color:#7a8498}
+@media(max-width:1050px){.grid{grid-template-columns:1fr}.sidebar{width:220px}.side-item{font-size:13px}}
+@media(max-width:760px){.sidebar{display:none}.main{padding:18px}.search{width:180px}.logo{width:auto}.top{padding:0 15px}.top-icon{display:none}}
 </style>
 </head>
-
 <body>
 
-<div class="container">
-
-<h1>🛒 Đặt đơn dịch vụ</h1>
-
-<label>Nền tảng</label>
-
-<select id="platform">
-    <option value="Facebook">Facebook</option>
-    <option value="TikTok">TikTok</option>
-    <option value="Instagram">Instagram</option>
-    <option value="YouTube">YouTube</option>
-    <option value="Shopee">Shopee</option>
-    <option value="Google">Google</option>
-    <option value="Telegram">Telegram</option>
-    <option value="X-Twitter">X-Twitter</option>
-    <option value="Threads">Threads</option>
-    <option value="Lazada">Lazada</option>
-</select>
-
-<label>Dịch vụ</label>
-
-<select id="service">
-
-    <!-- FACEBOOK -->
-
-    <option value="fb_like"
-        data-platform="Facebook"
-        data-price="40000"
-        data-unit="1000">
-        ❤️ Tăng Like bài viết Facebook - 40.000đ / 1000
-    </option>
-
-    <option value="fb_follow"
-        data-platform="Facebook"
-        data-price="40000"
-        data-unit="1000">
-        👤 Tăng Follow Profile & Page Facebook - 40.000đ / 1000
-    </option>
-
-    <option value="fb_page_like"
-        data-platform="Facebook"
-        data-price="25000"
-        data-unit="1000">
-        👍 Tăng Like Page Facebook - 25.000đ / 1000
-    </option>
-
-    <option value="fb_group"
-        data-platform="Facebook"
-        data-price="50000"
-        data-unit="1000">
-        👥 Tăng thành viên nhóm Facebook - 50.000đ / 1000
-    </option>
-
-    <option value="fb_comment"
-        data-platform="Facebook"
-        data-price="20000"
-        data-unit="100">
-        💬 Tăng bình luận Facebook - 20.000đ / 100
-    </option>
-
-    <option value="fb_view"
-        data-platform="Facebook"
-        data-price="30000"
-        data-unit="1000">
-        👁️ Tăng View video Facebook - 30.000đ / 1000
-    </option>
-
-    <option value="fb_live"
-        data-platform="Facebook"
-        data-price="50000"
-        data-unit="1000">
-        🔴 Tăng mắt Livestream Facebook - 50.000đ / 1000
-    </option>
-
-    <option value="fb_share"
-        data-platform="Facebook"
-        data-price="30000"
-        data-unit="100">
-        🔄 Tăng Share bài viết Facebook - 30.000đ / 100
-    </option>
-
-    <option value="fb_review"
-        data-platform="Facebook"
-        data-price="15000"
-        data-unit="100">
-        ⭐ Tăng Review Page Facebook - 15.000đ / 100
-    </option>
-
-
-    <!-- TIKTOK -->
-
-    <option value="tt_like"
-        data-platform="TikTok"
-        data-price="50000"
-        data-unit="1000">
-        ❤️ Tăng Like TikTok - 50.000đ / 1000
-    </option>
-
-    <option value="tt_follow"
-        data-platform="TikTok"
-        data-price="70000"
-        data-unit="1000">
-        👤 Tăng Theo dõi TikTok - 70.000đ / 1000
-    </option>
-
-    <option value="tt_view"
-        data-platform="TikTok"
-        data-price="20000"
-        data-unit="1000">
-        👁️ Tăng View TikTok - 20.000đ / 1000
-    </option>
-
-    <option value="tt_share"
-        data-platform="TikTok"
-        data-price="50000"
-        data-unit="1000">
-        🔄 Tăng Share TikTok - 50.000đ / 1000
-    </option>
-
-    <option value="tt_save"
-        data-platform="TikTok"
-        data-price="50000"
-        data-unit="1000">
-        🔖 Tăng Save TikTok - 50.000đ / 1000
-    </option>
-
-    <option value="tt_comment"
-        data-platform="TikTok"
-        data-price="40000"
-        data-unit="100">
-        💬 Tăng Bình luận TikTok - 40.000đ / 100
-    </option>
-
-    <option value="tt_live"
-        data-platform="TikTok"
-        data-price="50000"
-        data-unit="1000">
-        👀 Tăng mắt Livestream TikTok - 50.000đ / 1000
-    </option>
-
-    <option value="tt_vip"
-        data-platform="TikTok"
-        data-price="50000"
-        data-unit="1000">
-        ⭐ TikTok VIP View - 50.000đ / 1000
-    </option>
-
-
-    <!-- INSTAGRAM -->
-
-    <option value="ig_like"
-        data-platform="Instagram"
-        data-price="40000"
-        data-unit="1000">
-        ❤️ Tăng Like Instagram - 40.000đ / 1000
-    </option>
-
-    <option value="ig_follow"
-        data-platform="Instagram"
-        data-price="50000"
-        data-unit="1000">
-        👤 Tăng Follow Instagram - 50.000đ / 1000
-    </option>
-
-    <option value="ig_view"
-        data-platform="Instagram"
-        data-price="50000"
-        data-unit="1000">
-        👁️ Tăng View Instagram - 50.000đ / 1000
-    </option>
-
-    <option value="ig_comment"
-        data-platform="Instagram"
-        data-price="30000"
-        data-unit="100">
-        💬 Tăng bình luận Instagram - 30.000đ / 100
-    </option>
-
-    <option value="ig_share"
-        data-platform="Instagram"
-        data-price="70000"
-        data-unit="1000">
-        🔄 Tăng Share Instagram - 70.000đ / 1000
-    </option>
-
-    <option value="ig_save"
-        data-platform="Instagram"
-        data-price="70000"
-        data-unit="1000">
-        🔖 Tăng Save Instagram - 70.000đ / 1000
-    </option>
-
-    <option value="ig_story"
-        data-platform="Instagram"
-        data-price="30000"
-        data-unit="1000">
-        📸 Tăng tương tác Story Instagram - 30.000đ / 1000
-    </option>
-
-    <option value="ig_reels"
-        data-platform="Instagram"
-        data-price="40000"
-        data-unit="1000">
-        🎬 Tăng View Reels Instagram - 40.000đ / 1000
-    </option>
-
-
-    <!-- YOUTUBE -->
-
-    <option value="yt_view"
-        data-platform="YouTube"
-        data-price="50000"
-        data-unit="1000">
-        ▶️ Tăng View YouTube - 50.000đ / 1000
-    </option>
-
-    <option value="yt_like"
-        data-platform="YouTube"
-        data-price="70000"
-        data-unit="1000">
-        👍 Tăng Like YouTube - 70.000đ / 1000
-    </option>
-
-    <option value="yt_sub"
-        data-platform="YouTube"
-        data-price="80000"
-        data-unit="1000">
-        👤 Tăng Subscribe YouTube - 80.000đ / 1000
-    </option>
-
-    <option value="yt_comment"
-        data-platform="YouTube"
-        data-price="30000"
-        data-unit="100">
-        💬 Tăng Comment YouTube - 30.000đ / 100
-    </option>
-
-
-    <!-- SHOPEE -->
-
-    <option value="shopee_follow"
-        data-platform="Shopee"
-        data-price="30000"
-        data-unit="1000">
-        👤 Tăng Follow Shopee - 30.000đ / 1000
-    </option>
-
-    <option value="shopee_like"
-        data-platform="Shopee"
-        data-price="50.000"
-        data-unit="1000">
-        ❤️ Tăng Like Shopee - 50.000đ / 1000
-    </option>
-
-    <option value="shopee_view"
-        data-platform="Shopee"
-        data-price="30.000"
-        data-unit="1000">
-        👁️ Tăng View Shopee - 30.000đ / 1000
-    </option>
-
-
-    <!-- GOOGLE -->
-
-    <option value="google_review"
-        data-platform="Google"
-        data-price="20000"
-        data-unit="100">
-        ⭐ Tăng Review Google - 20.000đ / 100
-    </option>
-
-    <option value="google_map"
-        data-platform="Google"
-        data-price="50000"
-        data-unit="1000">
-        📍 Tăng tương tác Google Maps - 50.000đ / 1000
-    </option>
-
-
-    <!-- TELEGRAM -->
-
-    <option value="telegram_member"
-        data-platform="Telegram"
-        data-price="70000"
-        data-unit="1000">
-        👥 Tăng thành viên Telegram - 70.000đ / 1000
-    </option>
-
-    <option value="telegram_view"
-        data-platform="Telegram"
-        data-price="30000"
-        data-unit="1000">
-        👁️ Tăng View Telegram - 30.000đ / 1000
-    </option>
-
-
-    <!-- X -->
-
-    <option value="x_follow"
-        data-platform="X-Twitter"
-        data-price="80000"
-        data-unit="1000">
-        👤 Tăng Follow X-Twitter - 80.000đ / 1000
-    </option>
-
-    <option value="x_like"
-        data-platform="X-Twitter"
-        data-price="60000"
-        data-unit="1000">
-        ❤️ Tăng Like X-Twitter - 60.000đ / 1000
-    </option>
-
-
-    <!-- THREADS -->
-
-    <option value="threads_follow"
-        data-platform="Threads"
-        data-price="80000"
-        data-unit="1000">
-        👤 Tăng Follow Threads - 80.000đ / 1000
-    </option>
-
-    <option value="threads_like"
-        data-platform="Threads"
-        data-price="60000"
-        data-unit="1000">
-        ❤️ Tăng Like Threads - 60.000đ / 1000
-    </option>
-
-
-    <!-- LAZADA -->
-
-    <option value="lazada_follow"
-        data-platform="Lazada"
-        data-price="50000"
-        data-unit="1000">
-        👤 Tăng Follow Lazada - 50.000đ / 1000
-    </option>
-
-    <option value="lazada_view"
-        data-platform="Lazada"
-        data-price="30000"
-        data-unit="1000">
-        👁️ Tăng View Lazada - 30.000đ / 1000
-    </option>
-
-</select>
-
-
-<label>Link cần tăng</label>
-
-<input
-    type="text"
-    id="link"
-    placeholder="Dán link Facebook/TikTok/Instagram..."
->
-
-
-<label>Số lượng</label>
-
-<input
-    type="number"
-    id="quantity"
-    value="1000"
-    min="1"
->
-
-
-<div class="price-box">
-
-    <p>
-        <b>Đơn giá:</b>
-        <span id="unitPrice">500đ / 1000</span>
-    </p>
-
-    <p>
-        <b>Tổng tiền:</b>
-    </p>
-
-    <div class="total" id="total">
-        500đ
-    </div>
-
+<header class="top">
+  <div class="logo"><span>★</span> LOC STAR</div>
+  <div class="hamb">☰</div>
+  <input class="search" placeholder="⌕  Tìm dịch vụ...">
+  <div class="top-spacer"></div>
+  <button class="support">+ Hỗ trợ</button>
+  <div class="top-icon">▦</div><div class="top-icon">☼</div><div class="top-icon">♟</div>
+  <div class="avatar">👤</div>
+</header>
+
+<div class="layout">
+<aside class="sidebar">
+  <div class="side-title">NỀN TẢNG</div>
+  <div class="platform"><span class="fb">f</span><span>Facebook</span><span class="chev">⌃</span></div>
+  <div class="side-item active">♡　Tăng like bài viết</div>
+  <div class="side-item">♙　Tăng follow Profile & Page</div>
+  <div class="side-item">↻　Tăng Like Page & Follow page</div>
+  <div class="side-item">♙　Tăng thành viên nhóm</div>
+  <div class="side-item">▣　Tăng bình luận</div>
+  <div class="side-item">▣　Tăng view video</div>
+  <div class="side-item">▣　Tăng mắt livestream</div>
+  <div class="side-item">▣　Tăng chia sẻ bài viết</div>
+  <div class="side-item">▣　Tăng review Page</div>
+  <div class="side-item">▣　Tăng like bình luận</div>
+  <div class="side-item">▣　Tăng view story</div>
+  <div class="side-item">🛒　Vip like (Tăng like theo tháng)</div>
+  <div class="side-item">▤　Vip comment (Bình luận theo tháng)</div>
+</aside>
+
+<main class="main">
+  <div class="heading">
+    <div class="title">TĂNG LIKE BÀI VIẾT</div>
+    <div class="crumb">Trang chủ　›　Tăng like bài viết</div>
+  </div>
+
+  <div class="grid">
+    <section class="panel">
+      <div class="tabs">
+        <div class="tab active">▣　Đặt đơn</div>
+        <div class="tab">◷　Lịch sử đơn hàng</div>
+        <div class="tab">▱　Đặt nhiều đơn</div>
+        <div class="tab">⌛　Đơn chờ chạy</div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">▤　Máy chủ</div>
+        <div id="services" class="services">
+          <div class="empty">Đang tải dịch vụ Facebook Like...</div>
+        </div>
+
+        <div id="serverNote" class="server-note">
+          <div class="note-row blue">🔗 Link hợp lệ: Post Link</div>
+          <div class="note-row green">🌐 Tài nguyên: Tây</div>
+          <div class="note-row yellow">⚡ Bắt đầu: Lên ngay hoặc chậm nếu quá tải / nền tảng fix</div>
+          <div class="note-row red">⚠ Bảo hành: Theo thông tin máy chủ</div>
+          <div class="note-row purple">🔒 Hỗ trợ: Theo điều kiện dịch vụ</div>
+        </div>
+
+        <div class="field">
+          <div class="label">🔗 Liên kết mua hàng</div>
+          <div class="inputline">
+            <input id="link" placeholder="Nhập link hoặc ID cần lên đơn">
+            <button class="paste" onclick="pasteLink()">▣ Dán</button>
+          </div>
+          <div style="margin-top:8px;color:#5b55e8;font-size:14px">Đặt nhiều đơn</div>
+        </div>
+
+        <div class="field">
+          <div class="label">Số lượng <span id="minmax" style="color:#e14b5b;font-weight:600"></span></div>
+          <input id="quantity" class="quantity" type="number" min="1" value="10">
+        </div>
+
+        <div class="field">
+          <div class="label">Tổng thanh toán</div>
+          <div class="totalbox"><div id="total" class="amount">0đ</div><div id="unit" class="unit">0đ / 1</div></div>
+          <div id="words" style="margin-top:5px;color:#69748e;font-size:13px"></div>
+        </div>
+
+        <div class="field">
+          <div class="label">Ghi chú đơn hàng</div>
+          <textarea id="note" placeholder="Nhập ghi chú (nếu có)..."></textarea>
+        </div>
+
+        <div class="toggle"><span class="switch"></span> Hẹn giờ lên đơn</div>
+        <div class="toggle"><span class="switch"></span> Mua đơn lặp lại</div>
+
+        <button id="orderBtn" class="order" disabled onclick="placeOrder()">♙　Đặt đơn</button>
+
+        <div class="loginbox" id="loginBox">
+          <b>Bạn chưa đăng nhập.</b> Đăng nhập để sử dụng đầy đủ các tính năng của hệ thống.
+          <div class="login-actions">
+            <button class="login" onclick="location.href='login.html'">Đăng nhập</button>
+            <button class="register" onclick="location.href='register.html'">Đăng ký</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="notice">LƯU Ý NÊN ĐỌC TRÁNH MẤT TIỀN</div>
+    </section>
+
+    <aside class="side-card">
+      <div class="side-head">🛒　THÔNG TIN ĐƠN HÀNG</div>
+      <div class="summary-row"><div class="summary-label">Nền tảng</div><div class="summary-value">🔵 Facebook</div></div>
+      <div class="summary-row"><div class="summary-label">Dịch vụ</div><div id="summaryService" class="summary-value">Chưa chọn dịch vụ</div></div>
+      <div class="summary-row"><div class="summary-label">Đơn giá</div><div id="summaryRate" class="summary-value">0 VND / 1000</div></div>
+      <div class="summary-row"><div class="summary-label">Số lượng</div><div id="summaryQty" class="summary-value">10</div></div>
+      <div style="margin:18px 0 8px;font-weight:800">Tổng thanh toán</div>
+      <div class="summary-total"><div id="summaryTotal">0 VND</div><div class="balance">Số dư hiện tại: lấy từ tài khoản</div></div>
+    </aside>
+  </div>
+</main>
 </div>
-
-
-<label>Ghi chú</label>
-
-<textarea
-    id="note"
-    rows="4"
-    placeholder="Ghi chú cho đơn hàng nếu có..."
-></textarea>
-
-
-<button type="button" onclick="datDon()">
-    🚀 Đặt đơn
-</button>
-
-
-<a class="back" href="index.html">
-    ← Quay lại trang chủ
-</a>
-
-</div>
-
 
 <script>
+const API_URL="https://locstar-shop-api.onrender.com";
+let selected=null;
+let services=[];
 
-// ===============================
-// LẤY CÁC Ô TRÊN TRANG
-// ===============================
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c]))}
+function money(n){return Math.round(Number(n)||0).toLocaleString("vi-VN")}
+function token(){return localStorage.getItem("authToken")||""}
 
-const platformSelect =
-    document.getElementById("platform");
-
-const serviceSelect =
-    document.getElementById("service");
-
-const quantityInput =
-    document.getElementById("quantity");
-
-
-// ===============================
-// LƯU TOÀN BỘ DỊCH VỤ BAN ĐẦU
-// ===============================
-
-const tatCaDichVu =
-    Array.from(serviceSelect.options);
-
-
-// ===============================
-// LỌC DỊCH VỤ
-// ===============================
-
-function locDichVu() {
-
-    const platform =
-        platformSelect.value;
-
-    serviceSelect.innerHTML = "";
-
-
-    tatCaDichVu
-        .filter(function(option) {
-
-            return option.dataset.platform === platform;
-
-        })
-        .forEach(function(option) {
-
-            serviceSelect.appendChild(
-                option.cloneNode(true)
-            );
-
-        });
-
-
-    // Chọn dịch vụ đầu tiên
-    if (serviceSelect.options.length > 0) {
-
-        serviceSelect.selectedIndex = 0;
-
-    }
-
-
-    tinhTien();
+async function loadServices(){
+  const box=document.getElementById("services");
+  if(!token()){
+    box.innerHTML='<div class="empty">Đăng nhập để tải danh sách máy chủ từ SeedingVN.</div>';
+    return;
+  }
+  try{
+    const r=await fetch(API_URL+"/api/provider/services",{headers:{Authorization:"Bearer "+token()}});
+    const data=await r.json();
+    if(!r.ok||!data.success) throw new Error(data.message||"Không tải được dịch vụ");
+    services=Array.isArray(data.services)?data.services:[];
+    const list=services.filter(s=>{
+      const t=((s.name||"")+" "+(s.platform||"")+" "+(s.category||"")).toLowerCase();
+      return t.includes("facebook") && (t.includes("like")||t.includes("reaction")||t.includes("cảm xúc"));
+    });
+    if(!list.length){box.innerHTML='<div class="empty">Chưa tìm thấy dịch vụ Facebook Like phù hợp từ SeedingVN.</div>';return}
+    box.innerHTML="";
+    list.forEach((s,i)=>{
+      const label=document.createElement("label");
+      label.className="service";
+      label.innerHTML='<input type="radio" name="svc" '+(i===0?"checked":"")+'><span class="code">MC '+esc(s.service)+'</span><span class="name">'+esc(s.name||"Facebook Like")+'</span><span class="rate">'+money(s.rate)+' VND</span>';
+      label.querySelector("input").addEventListener("change",()=>selectService(s));
+      box.appendChild(label);
+    });
+    selectService(list[0]);
+  }catch(e){
+    console.error(e);
+    box.innerHTML='<div class="empty">Không thể tải danh sách dịch vụ. Kiểm tra Render và đăng nhập lại.</div>';
+  }
 }
 
-
-// ===============================
-// TÍNH TIỀN TỰ ĐỘNG
-// ===============================
-
-function tinhTien() {
-
-    const option =
-        serviceSelect.options[
-            serviceSelect.selectedIndex
-        ];
-
-
-    if (!option) {
-
-        document.getElementById("unitPrice")
-            .textContent = "0đ";
-
-        document.getElementById("total")
-            .textContent = "0đ";
-
-        return;
-    }
-
-
-    const price =
-        Number(option.dataset.price) || 0;
-
-
-    const unit =
-        Number(option.dataset.unit) || 1000;
-
-
-    const quantity =
-        Number(quantityInput.value) || 0;
-
-
-    const total =
-        price * quantity / unit;
-
-
-    // HIỂN THỊ ĐƠN GIÁ
-
-    document.getElementById("unitPrice")
-        .textContent =
-        price.toLocaleString("vi-VN")
-        + "đ / "
-        + unit.toLocaleString("vi-VN");
-
-
-    // HIỂN THỊ TỔNG TIỀN
-
-    document.getElementById("total")
-        .textContent =
-        total.toLocaleString("vi-VN")
-        + "đ";
+function selectService(s){
+  selected=s;
+  document.getElementById("orderBtn").disabled=false;
+  document.getElementById("summaryService").textContent=s.name||"Facebook Like";
+  document.getElementById("summaryRate").textContent=money(s.sell_rate ?? s.rate)+" VND / 1000";
+  document.getElementById("minmax").textContent="("+money(s.min)+" – "+money(s.max)+")";
+  document.getElementById("quantity").min=Number(s.min)||1;
+  if(Number(document.getElementById("quantity").value)<Number(s.min)) document.getElementById("quantity").value=Number(s.min)||1;
+  document.getElementById("serverNote").classList.add("show");
+  calculate();
 }
 
-
-// ===============================
-// ĐẶT ĐƠN
-// ===============================
-
-function datDon() {
-
-    const username =
-        localStorage.getItem("username");
-
-
-    if (!username) {
-
-        alert(
-            "Vui lòng đăng nhập trước khi đặt đơn!"
-        );
-
-        window.location.href =
-            "login.html";
-
-        return;
-    }
-
-
-    const link =
-        document.getElementById("link")
-        .value.trim();
-
-
-    const quantity =
-        Number(quantityInput.value);
-
-
-    const option =
-        serviceSelect.options[
-            serviceSelect.selectedIndex
-        ];
-
-
-    if (!option) {
-
-        alert("Vui lòng chọn dịch vụ!");
-
-        return;
-    }
-
-
-    const serviceName =
-        option.textContent.trim();
-
-
-    const price =
-        Number(option.dataset.price) || 0;
-
-
-    const unit =
-        Number(option.dataset.unit) || 1000;
-
-
-    const total =
-        price * quantity / unit;
-
-
-    // ===============================
-    // KIỂM TRA LINK
-    // ===============================
-
-    if (!link) {
-
-        alert(
-            "Vui lòng nhập link cần tăng!"
-        );
-
-        return;
-    }
-
-
-    // ===============================
-    // KIỂM TRA SỐ LƯỢNG
-    // ===============================
-
-    if (!quantity || quantity <= 0) {
-
-        alert(
-            "Vui lòng nhập số lượng hợp lệ!"
-        );
-
-        return;
-    }
-
-
-    // ===============================
-    // LẤY SỐ DƯ
-    // ===============================
-
-    let balance =
-        Number(
-            localStorage.getItem("balance")
-        ) || 0;
-
-
-    // ===============================
-    // KIỂM TRA SỐ DƯ
-    // ===============================
-
-    if (balance < total) {
-
-        alert(
-            "Số dư không đủ!\n\n" +
-
-            "Số dư hiện tại: " +
-            balance.toLocaleString("vi-VN") +
-            "đ\n" +
-
-            "Cần thanh toán: " +
-            total.toLocaleString("vi-VN") +
-            "đ\n\n" +
-
-            "Vui lòng nạp thêm tiền."
-        );
-
-        return;
-    }
-
-
-    // ===============================
-    // TRỪ TIỀN
-    // ===============================
-
-    balance =
-        balance - total;
-
-
-    localStorage.setItem(
-        "balance",
-        balance
-    );
-
-
-    // ===============================
-    // TẠO ĐƠN
-    // ===============================
-
-    const order = {
-
-        id:
-            "LOC" + Date.now(),
-
-        username:
-            username,
-
-        platform:
-            platformSelect.value,
-
-        service:
-            serviceName,
-
-        link:
-            link,
-
-        quantity:
-            quantity,
-
-        price:
-            price,
-
-        unit:
-            unit,
-
-        total:
-            total,
-
-        note:
-            document.getElementById("note")
-            .value.trim(),
-
-        time:
-            new Date().toLocaleString("vi-VN"),
-
-        status:
-            "Chờ xử lý"
-    };
-
-
-    // ===============================
-    // LẤY DANH SÁCH ĐƠN
-    // ===============================
-
-    let orders =
-        JSON.parse(
-            localStorage.getItem("orders")
-        ) || [];
-
-
-    // ===============================
-    // THÊM ĐƠN
-    // ===============================
-
-    orders.push(order);
-
-
-    // ===============================
-    // LƯU ĐƠN
-    // ===============================
-
-    localStorage.setItem(
-        "orders",
-        JSON.stringify(orders)
-    );
-
-
-    // ===============================
-    // THÔNG BÁO
-    // ===============================
-
-    alert(
-
-        "🎉 ĐẶT ĐƠN THÀNH CÔNG!\n\n" +
-
-        "Mã đơn: " +
-        order.id +
-
-        "\nNền tảng: " +
-        order.platform +
-
-        "\nDịch vụ: " +
-        serviceName +
-
-        "\nSố lượng: " +
-        quantity.toLocaleString("vi-VN") +
-
-        "\nTổng tiền: " +
-        total.toLocaleString("vi-VN") +
-        "đ\n\n" +
-
-        "Số dư còn lại: " +
-        balance.toLocaleString("vi-VN") +
-        "đ\n\n" +
-
-        "Trạng thái: Chờ xử lý"
-
-    );
-
-
-    // ===============================
-    // XÓA LINK + GHI CHÚ
-    // ===============================
-
-    document.getElementById("link")
-        .value = "";
-
-    document.getElementById("note")
-        .value = "";
-
+function calculate(){
+  const q=Number(document.getElementById("quantity").value)||0;
+  const rate=selected?Number(selected.sell_rate ?? selected.rate)||0:0;
+  const total=rate*q/1000;
+  document.getElementById("total").textContent=money(total)+"đ";
+  document.getElementById("unit").textContent=money(rate)+"đ / 1000";
+  document.getElementById("summaryQty").textContent=money(q);
+  document.getElementById("summaryTotal").textContent=money(total)+" VND";
+  document.getElementById("words").textContent=total>0?"Tổng tiền dự kiến: "+money(total)+" đồng":"";
 }
 
-
-// ===============================
-// ĐỔI NỀN TẢNG
-// ===============================
-
-platformSelect.addEventListener(
-    "change",
-    locDichVu
-);
-
-
-// ===============================
-// ĐỔI DỊCH VỤ
-// ===============================
-
-serviceSelect.addEventListener(
-    "change",
-    tinhTien
-);
-
-
-// ===============================
-// ĐỔI SỐ LƯỢNG
-// ===============================
-
-quantityInput.addEventListener(
-    "input",
-    tinhTien
-);
-
-
-// ===============================
-// NHẬN DỊCH VỤ TỪ SIDEBAR
-// ===============================
-
-const urlParams =
-    new URLSearchParams(
-        window.location.search
-    );
-
-
-const urlPlatform =
-    urlParams.get("platform");
-
-
-const urlService =
-    urlParams.get("service");
-
-
-// ===============================
-// MAP TÊN NỀN TẢNG
-// ===============================
-
-const platformMap = {
-
-    Facebook: "Facebook",
-
-    TikTok: "TikTok",
-
-    Instagram: "Instagram",
-
-    Youtube: "YouTube",
-
-    YouTube: "YouTube",
-
-    Shopee: "Shopee",
-
-    Google: "Google",
-
-    Telegram: "Telegram",
-
-    XTwitter: "X-Twitter",
-
-    "X-Twitter": "X-Twitter",
-
-    Threads: "Threads",
-
-    Lazada: "Lazada"
-};
-
-
-// ===============================
-// XỬ LÝ PLATFORM TỪ URL
-// ===============================
-
-if (urlPlatform) {
-
-    const mappedPlatform =
-        platformMap[urlPlatform];
-
-
-    if (mappedPlatform) {
-
-        platformSelect.value =
-            mappedPlatform;
-
-        locDichVu();
-    }
+async function pasteLink(){
+  try{document.getElementById("link").value=await navigator.clipboard.readText()}
+  catch(e){alert("Không thể tự dán. Hãy nhấn Ctrl + V.")}
 }
 
-
-// ===============================
-// XỬ LÝ SERVICE TỪ URL
-// ===============================
-
-if (urlService) {
-
-    const option =
-        Array.from(
-            serviceSelect.options
-        ).find(function(item) {
-
-            return item.value === urlService;
-
-        });
-
-
-    if (option) {
-
-        serviceSelect.value =
-            urlService;
-
-        tinhTien();
-    }
+async function placeOrder(){
+  if(!token()){location.href="login.html";return}
+  const link=document.getElementById("link").value.trim();
+  const q=Number(document.getElementById("quantity").value)||0;
+  const note=document.getElementById("note").value.trim();
+  const btn=document.getElementById("orderBtn");
+  if(!selected)return alert("Vui lòng chọn máy chủ.");
+  if(!link)return alert("Vui lòng nhập link.");
+  if(q<Number(selected.min)||q>Number(selected.max))return alert("Số lượng phải từ "+selected.min+" đến "+selected.max+".");
+  const total=(Number(selected.sell_rate ?? selected.rate)||0)*q/1000;
+  if(!confirm("Xác nhận đặt đơn?\\n\\nSố lượng: "+q.toLocaleString("vi-VN")+"\\nTổng tiền: "+money(total)+" VND"))return;
+  btn.disabled=true;
+  btn.textContent="Đang gửi đơn...";
+  try{
+    const r=await fetch(API_URL+"/api/orders",{
+      method:"POST",
+      headers:{"Content-Type":"application/json","Authorization":"Bearer "+token()},
+      body:JSON.stringify({serviceId:String(selected.service),link,quantity:q,note})
+    });
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok||!data.success)throw new Error(data.message||"Đặt đơn thất bại");
+    alert("ĐẶT ĐƠN THÀNH CÔNG!\\n\\nMã đơn LOC STAR: "+data.orderId+"\\nMã đơn nhà cung cấp: "+data.providerOrderId+"\\nSố lượng: "+q.toLocaleString("vi-VN")+"\\nTổng tiền: "+money(data.total)+" VND");
+    document.getElementById("link").value="";
+    document.getElementById("note").value="";
+  }catch(e){
+    alert(e.message);
+  }finally{
+    btn.disabled=false;
+    btn.textContent="♙　Đặt đơn";
+  }
 }
 
-
-// ===============================
-// CHẠY LẦN ĐẦU
-// ===============================
-
-if (!urlPlatform) {
-
-    locDichVu();
-
-} else {
-
-    tinhTien();
-
-}
-
+document.getElementById("quantity").addEventListener("input",calculate);
+loadServices();
 </script>
-
 </body>
 </html>
