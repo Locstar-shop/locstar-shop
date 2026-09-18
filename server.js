@@ -33,7 +33,12 @@ const BANK_NAME =
 
 const BANK_OWNER =
   process.env.BANK_OWNER || "NGUYEN TAN LOC";
+const PROVIDER_API_URL =
+  process.env.PROVIDER_API_URL ||
+  "https://seedingvn.vn/api/v2";
 
+const PROVIDER_API_KEY =
+  process.env.PROVIDER_API_KEY;
 const supabase =
   SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY
     ? createClient(
@@ -1102,6 +1107,133 @@ app.get(
         success: false,
         message:
           "Lỗi máy chủ"
+      });
+    }
+  }
+);
+// ========================================
+// SEEDINGVN PROVIDER
+// ========================================
+
+// Kiểm tra số dư tài khoản SeedingVN
+app.get(
+  "/api/provider/balance",
+  authenticateToken,
+  async (_req, res) => {
+    try {
+      if (!PROVIDER_API_URL || !PROVIDER_API_KEY) {
+        return res.status(500).json({
+          success: false,
+          message: "Provider API chưa được cấu hình"
+        });
+      }
+
+      const params = new URLSearchParams();
+
+      params.append("key", PROVIDER_API_KEY);
+      params.append("action", "balance");
+
+      const response = await fetch(
+        PROVIDER_API_URL,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/x-www-form-urlencoded"
+          },
+          body: params.toString()
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return res.status(502).json({
+          success: false,
+          message: "Provider API lỗi",
+          provider: data
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        balance: data.balance,
+        currency: data.currency,
+        provider: "SeedingVN"
+      });
+
+    } catch (err) {
+      console.error(
+        "Provider balance error:",
+        err
+      );
+
+      return res.status(500).json({
+        success: false,
+        message:
+          "Không thể kết nối Provider API"
+      });
+    }
+  }
+);
+
+
+// Lấy danh sách dịch vụ từ SeedingVN
+app.get(
+  "/api/provider/services",
+  authenticateToken,
+  async (_req, res) => {
+    try {
+      if (!PROVIDER_API_URL || !PROVIDER_API_KEY) {
+        return res.status(500).json({
+          success: false,
+          message: "Provider API chưa được cấu hình"
+        });
+      }
+
+      const params = new URLSearchParams();
+
+      params.append("key", PROVIDER_API_KEY);
+      params.append("action", "services");
+
+      const response = await fetch(
+        PROVIDER_API_URL,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/x-www-form-urlencoded"
+          },
+          body: params.toString()
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return res.status(502).json({
+          success: false,
+          message: "Provider API lỗi",
+          provider: data
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        services: data,
+        provider: "SeedingVN"
+      });
+
+    } catch (err) {
+      console.error(
+        "Provider services error:",
+        err
+      );
+
+      return res.status(500).json({
+        success: false,
+        message:
+          "Không thể lấy danh sách dịch vụ"
       });
     }
   }
