@@ -800,12 +800,16 @@ Object.keys(serviceMap).forEach(function(menuId) {
                 return;
             }
 
-            window.location.href =
-                "dat-don.html?platform=" +
-                encodeURIComponent(platformName) +
-                "&service=" +
-                encodeURIComponent(serviceCode);
-
+          if (serviceCode === "fb_follow") {
+    window.location.href =
+        "dat-don-facebook-follow-profile-page-final.html";
+} else {
+    window.location.href =
+        "dat-don.html?platform=" +
+        encodeURIComponent(platformName) +
+        "&service=" +
+        encodeURIComponent(serviceCode);
+}
         });
 
     });
