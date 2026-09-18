@@ -2,282 +2,119 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tăng Like bài viết - LOC STAR</title>
 <style>
-:root{
- --purple:#352661;--purple2:#5b55e8;--bg:#f3f6fc;--text:#18244d;
- --muted:#68728b;--line:#dfe5f1;--blue:#3187f6;--green:#21bd75;
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-button,input,textarea{font:inherit}
-.top{height:72px;background:#fff;border-bottom:1px solid #e9edf5;display:flex;align-items:center;padding:0 28px;gap:24px;position:sticky;top:0;z-index:5}
-.logo{width:220px;font-size:27px;font-weight:900;letter-spacing:.5px}
-.logo span{color:#f3b91f}.hamb{font-size:25px;color:#50607c}
-.search{width:360px;border:0;background:#f5f7fb;border-radius:8px;padding:12px 18px;color:#6d7890;outline:none}
-.top-spacer{flex:1}.support{background:#22bf76;color:#fff;border:0;border-radius:6px;padding:11px 18px;font-weight:700}
-.top-icon{font-size:20px;color:#3c4965}.avatar{width:40px;height:40px;border-radius:50%;background:#ffd5ea;display:grid;place-items:center}
-.layout{display:flex;min-height:calc(100vh - 72px)}
-.sidebar{width:280px;background:var(--purple);color:#fff;padding:25px 15px;flex:none;overflow:auto}
-.side-title{font-size:13px;color:#c8bde8;font-weight:700;margin:5px 10px 18px}
-.platform{display:flex;align-items:center;gap:12px;padding:10px 12px;font-weight:700}
-.fb{width:30px;height:30px;border-radius:50%;background:#1877f2;display:grid;place-items:center;font-weight:900}
-.chev{margin-left:auto;color:#c9c0e8}.side-item{padding:11px 16px;margin:2px 0;color:#d9d1f0;border-radius:7px;font-size:14px;line-height:1.25;cursor:pointer}
-.side-item.active{background:linear-gradient(90deg,#5d50df,#4e46bd);color:#fff;font-weight:700}
-.main{flex:1;padding:28px 34px;max-width:1250px}
-.heading{display:flex;justify-content:space-between;align-items:center;margin:5px 0 24px}
-.title{font-size:21px;font-weight:800}.crumb{color:#69748e;font-size:14px}
-.grid{display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:20px}
-.panel{background:#fff;border:1px solid var(--line);border-radius:7px;padding:20px}
-.tabs{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line);margin-bottom:20px}
-.tab{padding:14px 10px;text-align:center;font-size:14px;cursor:pointer}
-.tab.active{color:var(--purple2);border:1px solid var(--line);border-bottom:2px solid #fff;border-radius:6px 6px 0 0;margin-bottom:-1px;font-weight:700}
-.card{background:#fbfcfe;border-radius:12px;padding:18px}
-.section-title{font-size:16px;font-weight:800;margin:4px 0 13px}
-.services{display:flex;flex-direction:column}
-.service{display:grid;grid-template-columns:24px 74px minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px 4px;border-bottom:1px solid #edf0f6;cursor:pointer}
-.service:last-child{border-bottom:0}
-.service input{width:18px;height:18px;accent-color:#5a55e9}
-.code{font-size:13px;font-weight:700}
-.name{font-size:14px;color:#5148dd;font-weight:700;line-height:1.3}
-.rate{background:#5a55e9;color:#fff;padding:5px 9px;border-radius:6px;font-size:12px;font-weight:800;white-space:nowrap}
-.server-note{display:none;margin:15px 0 8px;border-left:4px solid #15a9aa;background:#e8f9f8;padding:12px 14px;border-radius:4px}
-.server-note.show{display:block}
-.note-row{margin:5px 0;padding:7px 10px;border-radius:7px}.note-row.blue{background:#dfeeff}.note-row.green{background:#d8efe3}.note-row.yellow{background:#fff0c9}.note-row.red{background:#f8d9dc}.note-row.purple{background:#e9ddfb}
-.field{margin-top:18px}.label{font-weight:800;font-size:14px;margin-bottom:8px}
-.inputline{display:flex}.inputline input{flex:1;min-width:0;border:1px solid #d9dfeb;border-radius:6px 0 0 6px;padding:13px;outline:none}.paste{border:0;background:#448cf2;color:#fff;padding:0 18px;font-weight:700;border-radius:0 6px 6px 0;cursor:pointer}
-.quantity{width:100%;padding:13px;border:1px solid #d9dfeb;border-radius:6px;outline:none}
-.totalbox{margin-top:18px;background:#fff;border:1px solid #d9dfeb;border-radius:6px;display:flex;align-items:center;overflow:hidden}
-.totalbox .amount{flex:1;padding:13px;font-size:18px;font-weight:800}.unit{padding:13px;border-left:1px solid #d9dfeb;color:#56627c;font-size:13px}
-textarea{width:100%;min-height:90px;border:1px solid #d9dfeb;border-radius:6px;padding:13px;resize:vertical;outline:none}
-.toggle{display:flex;align-items:center;gap:10px;margin:14px 0;font-size:14px}.switch{width:32px;height:18px;border-radius:20px;background:#d8dfeb;position:relative}.switch:after{content:"";position:absolute;width:14px;height:14px;left:2px;top:2px;background:#fff;border-radius:50%}
-.order{width:100%;margin-top:8px;border:0;background:var(--purple2);color:#fff;padding:14px;border-radius:6px;font-weight:800;cursor:pointer}.order:disabled{opacity:.55;cursor:not-allowed}
-.loginbox{margin-top:10px;background:#dceeff;border-radius:8px;padding:16px;text-align:center;color:#2877dc;font-size:14px;line-height:1.45}.login-actions{display:flex;gap:10px;justify-content:center;margin-top:12px}.login-actions button{border:0;border-radius:6px;padding:10px 18px;font-weight:700;cursor:pointer}.login{background:#fff;color:#3e70db}.register{background:#348bf1;color:#fff}
-.side-card{background:#fff;border:1px solid var(--line);border-radius:7px;padding:16px}.side-head{background:#f1f5ff;border-radius:7px;padding:13px;font-weight:800;margin-bottom:14px}.summary-row{display:grid;grid-template-columns:90px 1fr;gap:10px;align-items:center;margin:12px 0}.summary-label{font-weight:700;font-size:14px}.summary-value{background:#f3f7ff;border:1px solid #e0e8f5;border-radius:7px;padding:11px;color:#60708d}.summary-total{background:#fff0f3;border-radius:8px;padding:15px;text-align:right;color:#e63d58;font-weight:900;font-size:22px}.balance{font-size:12px;color:#e63d58;margin-top:4px}
-.notice{margin-top:18px;background:#fff8d9;border:1px solid #f2df91;padding:14px;border-radius:7px;text-align:center;font-weight:700}
-.empty{padding:22px;text-align:center;color:#7a8498}
-@media(max-width:1050px){.grid{grid-template-columns:1fr}.sidebar{width:220px}.side-item{font-size:13px}}
-@media(max-width:760px){.sidebar{display:none}.main{padding:18px}.search{width:180px}.logo{width:auto}.top{padding:0 15px}.top-icon{display:none}}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Arial,sans-serif;color:#222}body{background:#fff8df}
+.sidebar{position:fixed;left:0;top:0;width:245px;height:100vh;background:#30245d;color:#fff;overflow-y:auto;z-index:10}.brand{height:108px;background:#000;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;letter-spacing:1px}.menu-title{font-size:11px;color:#bfb5ea;padding:16px 20px 8px;text-transform:uppercase}.menu-item{padding:10px 20px;color:#ddd8f5;font-size:13px;line-height:1.35;cursor:pointer}.menu-item:hover,.menu-item.active{background:#4d3c91;color:#fff}.platform{font-size:13px;font-weight:600}.sub{padding-left:36px}.sub .menu-item{font-size:12px;padding:9px 14px}.arrow{float:right}
+.main{margin-left:245px;min-height:100vh}.topbar{height:72px;background:#fffdf6;border-bottom:1px solid #eee;display:flex;align-items:center;gap:22px;padding:0 24px;position:sticky;top:0;z-index:5}.hamb{font-size:25px;color:#555}.search{width:280px;background:#fff;border:1px solid #eee;border-radius:7px;padding:11px 15px;color:#888}.search input{border:0;outline:0;background:transparent;width:220px;font-size:14px}.top-actions{margin-left:auto;display:flex;align-items:center;gap:15px}.support{background:#27c56b;color:#fff;border:0;border-radius:5px;padding:11px 15px;font-weight:bold}.icon{font-size:19px;color:#444}.avatar{width:34px;height:34px;border-radius:50%;background:#f5a8d0;display:flex;align-items:center;justify-content:center}
+.content{max-width:1030px;margin:0 auto;padding:22px 24px 60px}.title-row{display:flex;align-items:center;justify-content:space-between;margin:8px 4px 20px}.title{font-size:17px;font-weight:bold}.crumb{font-size:13px;color:#777}.outer{background:#fff;border:1px solid #ddd;border-radius:8px;padding:12px}.tabs{display:flex;border-bottom:1px solid #ddd;overflow:auto}.tab{padding:13px 18px;font-size:14px;white-space:nowrap}.tab.active{color:#5149e8;border:1px solid #ddd;border-bottom-color:#fff;border-radius:5px 5px 0 0;margin-bottom:-1px}.card{background:#fff;border-radius:10px;margin-top:16px;padding:16px}.machine-title{font-size:14px;font-weight:bold;margin-bottom:12px}.services{background:#f7f9fb;border-radius:6px;padding:7px 10px}.service{display:flex;gap:10px;align-items:flex-start;padding:8px 4px;border-bottom:1px solid #e9edf2;cursor:pointer;font-size:13px}.service:last-child{border-bottom:0}.service input{margin-top:3px;accent-color:#5c57e8}.service-code{font-size:11px;font-weight:bold;min-width:48px}.service-name{color:#5149e8;font-weight:600;line-height:1.45}.price{background:#5b55e8;color:#fff;border-radius:5px;padding:3px 7px;font-size:11px;font-weight:bold;white-space:nowrap;margin-left:5px}.notes{max-width:700px;margin:16px auto 0;border-left:4px solid #17a7aa;background:#e5f7f5;padding:8px;border-radius:4px}.note{padding:8px 10px;border-radius:7px;margin:3px 0;font-size:13px}.n1{background:#e5f0ff}.n2{background:#d8f0e5}.n3{background:#fff0c8}.n4{background:#f8d9dd}.n5{background:#e9dcf7}.form{max-width:700px;margin:18px auto 0}.label{font-weight:bold;font-size:13px;margin:13px 0 7px}.link{display:flex}.link input{flex:1;border:1px solid #d8dce4;border-radius:7px 0 0 7px;padding:12px;font-size:13px;outline:none}.paste{border:0;border-radius:0 7px 7px 0;background:#4387eb;color:#fff;padding:0 17px}.qty{width:100%;padding:12px;border:1px solid #d8dce4;border-radius:7px;font-size:13px}.help{color:#e53935;font-size:12px;margin-top:5px}.total{margin-top:14px;background:#f6f7fa;border-radius:7px;padding:13px;display:flex;justify-content:space-between;align-items:center}.total strong{font-size:20px;color:#5149e8}.textarea{width:100%;min-height:80px;padding:11px;border:1px solid #d8dce4;border-radius:7px;resize:vertical}.switches{display:flex;gap:22px;font-size:12px;margin:14px 0}.switches label{display:flex;gap:6px;align-items:center}.order{width:100%;padding:13px;border:0;border-radius:7px;background:#4387eb;color:#fff;font-size:14px;font-weight:bold}.future{margin-top:12px;padding:9px 11px;background:#fff8df;border:1px solid #efd98c;border-radius:7px;color:#695919;font-size:12px;line-height:1.5}
+@media(max-width:800px){.sidebar{width:205px}.main{margin-left:205px}.content{padding:16px 10px}.title-row{display:block}.crumb{margin-top:8px}.topbar{padding:0 12px}.search{width:220px}.search input{width:170px}}
 </style>
 </head>
 <body>
-
-<header class="top">
-  <div class="logo"><span>★</span> LOC STAR</div>
-  <div class="hamb">☰</div>
-  <input class="search" placeholder="⌕  Tìm dịch vụ...">
-  <div class="top-spacer"></div>
-  <button class="support">+ Hỗ trợ</button>
-  <div class="top-icon">▦</div><div class="top-icon">☼</div><div class="top-icon">♟</div>
-  <div class="avatar">👤</div>
-</header>
-
-<div class="layout">
 <aside class="sidebar">
-  <div class="side-title">NỀN TẢNG</div>
-  <div class="platform"><span class="fb">f</span><span>Facebook</span><span class="chev">⌃</span></div>
-  <div class="side-item active">♡　Tăng like bài viết</div>
-  <div class="side-item">♙　Tăng follow Profile & Page</div>
-  <div class="side-item">↻　Tăng Like Page & Follow page</div>
-  <div class="side-item">♙　Tăng thành viên nhóm</div>
-  <div class="side-item">▣　Tăng bình luận</div>
-  <div class="side-item">▣　Tăng view video</div>
-  <div class="side-item">▣　Tăng mắt livestream</div>
-  <div class="side-item">▣　Tăng chia sẻ bài viết</div>
-  <div class="side-item">▣　Tăng review Page</div>
-  <div class="side-item">▣　Tăng like bình luận</div>
-  <div class="side-item">▣　Tăng view story</div>
-  <div class="side-item">🛒　Vip like (Tăng like theo tháng)</div>
-  <div class="side-item">▤　Vip comment (Bình luận theo tháng)</div>
+  <div class="brand">LOC STAR</div>
+  <div class="menu-title">MENU CHÍNH</div>
+  <div class="menu-item">⌂　Trang chủ</div>
+  <div class="menu-item">▤　Quản lý đơn hàng</div>
+  <div class="menu-item">◷　Luồng tiền</div>
+  <div class="menu-item">♙　Tài khoản của tôi</div>
+  <div class="menu-item">▣　Nạp tiền</div>
+  <div class="menu-item">▤　Lịch sử nạp tiền</div>
+  <div class="menu-item">◉　Hoàn tiền</div>
+  <div class="menu-item">▥　Thống kê</div>
+  <div class="menu-item">◇　Bảng giá dịch vụ</div>
+  <div class="menu-item">◉　Tạo web con</div>
+  <div class="menu-item">▣　Tài liệu API</div>
+  <div class="menu-item">♧　Hỗ trợ</div>
+  <div class="menu-item">♧　Thông báo</div>
+  <div class="menu-title">NỀN TẢNG</div>
+  <div class="menu-item platform active">🔵　Facebook <span class="arrow">⌃</span></div>
+  <div class="sub">
+    <div class="menu-item active">👍　Tăng Like bài viết</div>
+    <div class="menu-item">👤　Tăng Follow Profile &amp; Page</div>
+    <div class="menu-item">❤️　Tăng Like Page &amp; Follow Page</div>
+    <div class="menu-item">👥　Tăng thành viên nhóm</div>
+    <div class="menu-item">💬　Tăng bình luận</div>
+    <div class="menu-item">👁️　Tăng view video</div>
+    <div class="menu-item">🔴　Tăng mắt livestream</div>
+    <div class="menu-item">🔄　Tăng chia sẻ bài viết</div>
+    <div class="menu-item">⭐　Tăng review Page</div>
+    <div class="menu-item">❤️　Tăng like bình luận</div>
+    <div class="menu-item">📖　Tăng view story</div>
+    <div class="menu-item">⭐　Vip like (Tăng like theo tháng)</div>
+    <div class="menu-item">💬　Vip comment (Bình luận theo tháng)</div>
+  </div>
+  <div class="menu-item platform">🎵　TikTok <span class="arrow">⌄</span></div>
+  <div class="menu-item platform">📷　Instagram <span class="arrow">⌄</span></div>
+  <div class="menu-item platform">▶️　YouTube <span class="arrow">⌄</span></div>
+  <div class="menu-item platform">🛍️　Shopee <span class="arrow">⌄</span></div>
+  <div class="menu-item platform">🔍　Google <span class="arrow">⌄</span></div>
+  <div class="menu-item platform">✈️　Telegram <span class="arrow">⌄</span></div>
+  <div class="menu-item platform">𝕏　X-Twitter <span class="arrow">⌄</span></div>
+  <div class="menu-item platform">◎　Threads <span class="arrow">⌄</span></div>
+  <div class="menu-item platform">📦　Lazada <span class="arrow">⌄</span></div>
 </aside>
-
 <main class="main">
-  <div class="heading">
-    <div class="title">TĂNG LIKE BÀI VIẾT</div>
-    <div class="crumb">Trang chủ　›　Tăng like bài viết</div>
-  </div>
-
-  <div class="grid">
-    <section class="panel">
-      <div class="tabs">
-        <div class="tab active">▣　Đặt đơn</div>
-        <div class="tab">◷　Lịch sử đơn hàng</div>
-        <div class="tab">▱　Đặt nhiều đơn</div>
-        <div class="tab">⌛　Đơn chờ chạy</div>
-      </div>
-
+  <header class="topbar">
+    <div class="hamb">☰</div>
+    <div class="search">⌕ <input id="search" placeholder="Tìm dịch vụ"></div>
+    <div class="top-actions"><button class="support">+ Hỗ trợ</button><span class="icon">▦</span><span class="icon">☼</span><span class="icon">♟</span><span class="avatar">👤</span></div>
+  </header>
+  <section class="content">
+    <div class="title-row"><div class="title">TĂNG LIKE BÀI VIẾT</div><div class="crumb">Trang chủ　›　Tăng like bài viết</div></div>
+    <div class="outer">
+      <div class="tabs"><div class="tab active">Đặt đơn</div><div class="tab">Lịch sử đơn hàng</div><div class="tab">Đặt nhiều đơn</div><div class="tab">Đơn chờ chạy</div></div>
       <div class="card">
-        <div class="section-title">▤　Máy chủ</div>
-        <div id="services" class="services">
-          <div class="empty">Đang tải dịch vụ Facebook Like...</div>
+        <div class="machine-title">▤　Máy chủ</div>
+        <div class="services" id="services">
+          <label class="service"><input type="radio" name="server" checked data-code="6683" data-price="6.22"><span class="service-code">MC 6683</span><span class="service-name">Facebook like tây - Cực nhanh (1p /1k)</span><span class="price">6.22 VND</span></label>
+          <label class="service"><input type="radio" name="server" data-code="6736" data-price="2.77"><span class="service-code">MC 6736</span><span class="service-name">S44 - Facebook like TÂY</span><span class="price">2.77 VND</span></label>
+          <label class="service"><input type="radio" name="server" data-code="6792" data-price="17"><span class="service-code">MC 6792</span><span class="service-name">Facebook Cảm xúc Việt Nam | Chỉ lên like,love,care | Không bảo hành</span><span class="price">17 VND</span></label>
+          <label class="service"><input type="radio" name="server" data-code="6721" data-price="3.56"><span class="service-code">MC 6721</span><span class="service-name">Facebook Cảm xúc Tây - Cực rẻ</span><span class="price">3.56 VND</span></label>
+          <label class="service"><input type="radio" name="server" data-code="6431" data-price="5.81"><span class="service-code">MC 6431</span><span class="service-name">S3 - clone TÂY - siêu rẻ - Không bảo hành</span><span class="price">5.81 VND</span></label>
+          <label class="service"><input type="radio" name="server" data-code="6664" data-price="5.7"><span class="service-code">MC 6664</span><span class="service-name">S63 Like Tây - Nhanh</span><span class="price">5.7 VND</span></label>
+          <label class="service"><input type="radio" name="server" data-code="6743" data-price="8.95"><span class="service-code">MC 6743</span><span class="service-name">Facebook like cảm xúc Ấn</span><span class="price">8.95 VND</span></label>
+          <label class="service"><input type="radio" name="server" data-code="6631" data-price="12.91"><span class="service-code">MC 6631</span><span class="service-name">Like Vip Reaction</span><span class="price">12.91 VND</span></label>
+          <label class="service"><input type="radio" name="server" data-code="6560" data-price="12.91"><span class="service-code">MC 6560</span><span class="service-name">S2 Like post dự phòng</span><span class="price">12.91 VND</span></label>
+          <label class="service"><input type="radio" name="server" data-code="6682" data-price="12.54"><span class="service-code">MC 6682</span><span class="service-name">S2 like tài nguyên page -10k/ngày</span><span class="price">12.54 VND</span></label>
         </div>
-
-        <div id="serverNote" class="server-note">
-          <div class="note-row blue">🔗 Link hợp lệ: Post Link</div>
-          <div class="note-row green">🌐 Tài nguyên: Tây</div>
-          <div class="note-row yellow">⚡ Bắt đầu: Lên ngay hoặc chậm nếu quá tải / nền tảng fix</div>
-          <div class="note-row red">⚠ Bảo hành: Theo thông tin máy chủ</div>
-          <div class="note-row purple">🔒 Hỗ trợ: Theo điều kiện dịch vụ</div>
+        <div class="notes">
+          <div class="note n1">🔗 Link hợp lệ: <span id="resourceLink">Post Link</span></div>
+          <div class="note n2">🌐 Tài nguyên: <span id="resource">Tây</span></div>
+          <div class="note n3">⚡ Bắt đầu: <span id="start">Lên ngay hoặc chậm nếu quá tải / nền tảng fix</span></div>
+          <div class="note n4">⚠️ Bảo hành: <span id="warranty">Theo thông tin máy chủ</span></div>
+          <div class="note n5">🔒 Hỗ trợ: <span id="support">Theo điều kiện dịch vụ</span></div>
         </div>
-
-        <div class="field">
+        <div class="form">
           <div class="label">🔗 Liên kết mua hàng</div>
-          <div class="inputline">
-            <input id="link" placeholder="Nhập link hoặc ID cần lên đơn">
-            <button class="paste" onclick="pasteLink()">▣ Dán</button>
-          </div>
-          <div style="margin-top:8px;color:#5b55e8;font-size:14px">Đặt nhiều đơn</div>
-        </div>
-
-        <div class="field">
-          <div class="label">Số lượng <span id="minmax" style="color:#e14b5b;font-weight:600"></span></div>
-          <input id="quantity" class="quantity" type="number" min="1" value="10">
-        </div>
-
-        <div class="field">
-          <div class="label">Tổng thanh toán</div>
-          <div class="totalbox"><div id="total" class="amount">0đ</div><div id="unit" class="unit">0đ / 1</div></div>
-          <div id="words" style="margin-top:5px;color:#69748e;font-size:13px"></div>
-        </div>
-
-        <div class="field">
+          <div class="link"><input id="link" placeholder="Nhập link hoặc ID cần lên đơn"><button class="paste" onclick="pasteLink()">▣ Dán</button></div>
+          <div class="label">Số lượng</div>
+          <input id="qty" class="qty" type="number" value="1000" min="1" oninput="calc()">
+          <div class="help" id="range">Số lượng: 10 - 200.000</div>
+          <div class="total"><span><b>Tổng thanh toán</b></span><strong id="total">6.220đ</strong></div>
           <div class="label">Ghi chú đơn hàng</div>
-          <textarea id="note" placeholder="Nhập ghi chú (nếu có)..."></textarea>
-        </div>
-
-        <div class="toggle"><span class="switch"></span> Hẹn giờ lên đơn</div>
-        <div class="toggle"><span class="switch"></span> Mua đơn lặp lại</div>
-
-        <button id="orderBtn" class="order" disabled onclick="placeOrder()">♙　Đặt đơn</button>
-
-        <div class="loginbox" id="loginBox">
-          <b>Bạn chưa đăng nhập.</b> Đăng nhập để sử dụng đầy đủ các tính năng của hệ thống.
-          <div class="login-actions">
-            <button class="login" onclick="location.href='login.html'">Đăng nhập</button>
-            <button class="register" onclick="location.href='register.html'">Đăng ký</button>
-          </div>
+          <textarea id="noteText" class="textarea" placeholder="Ghi chú đơn hàng"></textarea>
+          <div class="switches"><label><input type="checkbox"> Hẹn giờ lên đơn</label><label><input type="checkbox"> Mua đơn lặp lại</label></div>
+          <button class="order" onclick="prepareOrder()">🚀 Đặt đơn</button>
+          <div class="future">Giao diện đã chuẩn bị theo mẫu panel. Nút đặt đơn hiện chưa gửi đơn thật; khi triển khai thật sẽ nối xử lý ở backend và nhà cung cấp hợp lệ.</div>
         </div>
       </div>
-
-      <div class="notice">LƯU Ý NÊN ĐỌC TRÁNH MẤT TIỀN</div>
-    </section>
-
-    <aside class="side-card">
-      <div class="side-head">🛒　THÔNG TIN ĐƠN HÀNG</div>
-      <div class="summary-row"><div class="summary-label">Nền tảng</div><div class="summary-value">🔵 Facebook</div></div>
-      <div class="summary-row"><div class="summary-label">Dịch vụ</div><div id="summaryService" class="summary-value">Chưa chọn dịch vụ</div></div>
-      <div class="summary-row"><div class="summary-label">Đơn giá</div><div id="summaryRate" class="summary-value">0 VND / 1000</div></div>
-      <div class="summary-row"><div class="summary-label">Số lượng</div><div id="summaryQty" class="summary-value">10</div></div>
-      <div style="margin:18px 0 8px;font-weight:800">Tổng thanh toán</div>
-      <div class="summary-total"><div id="summaryTotal">0 VND</div><div class="balance">Số dư hiện tại: lấy từ tài khoản</div></div>
-    </aside>
-  </div>
+    </div>
+  </section>
 </main>
-</div>
-
 <script>
-const API_URL="https://locstar-shop-api.onrender.com";
-let selected=null;
-let services=[];
-
-function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c]))}
-function money(n){return Math.round(Number(n)||0).toLocaleString("vi-VN")}
-function token(){return localStorage.getItem("authToken")||""}
-
-async function loadServices(){
-  const box=document.getElementById("services");
-  if(!token()){
-    box.innerHTML='<div class="empty">Đăng nhập để tải danh sách máy chủ từ SeedingVN.</div>';
-    return;
-  }
-  try{
-    const r=await fetch(API_URL+"/api/provider/services",{headers:{Authorization:"Bearer "+token()}});
-    const data=await r.json();
-    if(!r.ok||!data.success) throw new Error(data.message||"Không tải được dịch vụ");
-    services=Array.isArray(data.services)?data.services:[];
-    const list=services.filter(s=>{
-      const t=((s.name||"")+" "+(s.platform||"")+" "+(s.category||"")).toLowerCase();
-      return t.includes("facebook") && (t.includes("like")||t.includes("reaction")||t.includes("cảm xúc"));
-    });
-    if(!list.length){box.innerHTML='<div class="empty">Chưa tìm thấy dịch vụ Facebook Like phù hợp từ SeedingVN.</div>';return}
-    box.innerHTML="";
-    list.forEach((s,i)=>{
-      const label=document.createElement("label");
-      label.className="service";
-      label.innerHTML='<input type="radio" name="svc" '+(i===0?"checked":"")+'><span class="code">MC '+esc(s.service)+'</span><span class="name">'+esc(s.name||"Facebook Like")+'</span><span class="rate">'+money(s.rate)+' VND</span>';
-      label.querySelector("input").addEventListener("change",()=>selectService(s));
-      box.appendChild(label);
-    });
-    selectService(list[0]);
-  }catch(e){
-    console.error(e);
-    box.innerHTML='<div class="empty">Không thể tải danh sách dịch vụ. Kiểm tra Render và đăng nhập lại.</div>';
-  }
-}
-
-function selectService(s){
-  selected=s;
-  document.getElementById("orderBtn").disabled=false;
-  document.getElementById("summaryService").textContent=s.name||"Facebook Like";
-  document.getElementById("summaryRate").textContent=money(s.sell_rate ?? s.rate)+" VND / 1000";
-  document.getElementById("minmax").textContent="("+money(s.min)+" – "+money(s.max)+")";
-  document.getElementById("quantity").min=Number(s.min)||1;
-  if(Number(document.getElementById("quantity").value)<Number(s.min)) document.getElementById("quantity").value=Number(s.min)||1;
-  document.getElementById("serverNote").classList.add("show");
-  calculate();
-}
-
-function calculate(){
-  const q=Number(document.getElementById("quantity").value)||0;
-  const rate=selected?Number(selected.sell_rate ?? selected.rate)||0:0;
-  const total=rate*q/1000;
-  document.getElementById("total").textContent=money(total)+"đ";
-  document.getElementById("unit").textContent=money(rate)+"đ / 1000";
-  document.getElementById("summaryQty").textContent=money(q);
-  document.getElementById("summaryTotal").textContent=money(total)+" VND";
-  document.getElementById("words").textContent=total>0?"Tổng tiền dự kiến: "+money(total)+" đồng":"";
-}
-
-async function pasteLink(){
-  try{document.getElementById("link").value=await navigator.clipboard.readText()}
-  catch(e){alert("Không thể tự dán. Hãy nhấn Ctrl + V.")}
-}
-
-async function placeOrder(){
-  if(!token()){location.href="login.html";return}
-  const link=document.getElementById("link").value.trim();
-  const q=Number(document.getElementById("quantity").value)||0;
-  const note=document.getElementById("note").value.trim();
-  const btn=document.getElementById("orderBtn");
-  if(!selected)return alert("Vui lòng chọn máy chủ.");
-  if(!link)return alert("Vui lòng nhập link.");
-  if(q<Number(selected.min)||q>Number(selected.max))return alert("Số lượng phải từ "+selected.min+" đến "+selected.max+".");
-  const total=(Number(selected.sell_rate ?? selected.rate)||0)*q/1000;
-  if(!confirm("Xác nhận đặt đơn?\\n\\nSố lượng: "+q.toLocaleString("vi-VN")+"\\nTổng tiền: "+money(total)+" VND"))return;
-  btn.disabled=true;
-  btn.textContent="Đang gửi đơn...";
-  try{
-    const r=await fetch(API_URL+"/api/orders",{
-      method:"POST",
-      headers:{"Content-Type":"application/json","Authorization":"Bearer "+token()},
-      body:JSON.stringify({serviceId:String(selected.service),link,quantity:q,note})
-    });
-    const data=await r.json().catch(()=>({}));
-    if(!r.ok||!data.success)throw new Error(data.message||"Đặt đơn thất bại");
-    alert("ĐẶT ĐƠN THÀNH CÔNG!\\n\\nMã đơn LOC STAR: "+data.orderId+"\\nMã đơn nhà cung cấp: "+data.providerOrderId+"\\nSố lượng: "+q.toLocaleString("vi-VN")+"\\nTổng tiền: "+money(data.total)+" VND");
-    document.getElementById("link").value="";
-    document.getElementById("note").value="";
-  }catch(e){
-    alert(e.message);
-  }finally{
-    btn.disabled=false;
-    btn.textContent="♙　Đặt đơn";
-  }
-}
-
-document.getElementById("quantity").addEventListener("input",calculate);
-loadServices();
+const radios=[...document.querySelectorAll('input[name="server"]')];
+const qty=document.getElementById('qty');
+function selected(){return radios.find(x=>x.checked)}
+function calc(){const r=selected();const q=Math.max(0,Number(qty.value)||0);const p=Number(r?.dataset.price||0);document.getElementById('total').textContent=(p*q).toLocaleString('vi-VN')+'đ';}
+function updateNotes(){const r=selected();if(!r)return;const name=r.parentElement.querySelector('.service-name').textContent.toLowerCase();document.getElementById('resource').textContent=name.includes('việt nam')?'Việt Nam':name.includes('ấn')?'Ấn':name.includes('tây')?'Tây':'Theo gói máy chủ';}
+radios.forEach(r=>r.addEventListener('change',()=>{updateNotes();calc()}));
+function pasteLink(){navigator.clipboard?.readText().then(t=>document.getElementById('link').value=t).catch(()=>alert('Hãy nhấn Ctrl + V để dán.'))}
+function prepareOrder(){if(!document.getElementById('link').value.trim())return alert('Vui lòng nhập link.');if(Number(qty.value)<=0)return alert('Vui lòng nhập số lượng.');alert('Đã chọn MC '+selected().dataset.code+'. Phần gửi đơn thật chưa bật.');}
+document.getElementById('search').addEventListener('input',e=>{const k=e.target.value.toLowerCase();document.querySelectorAll('.service').forEach(s=>s.style.display=s.innerText.toLowerCase().includes(k)?'flex':'none')});
+updateNotes();calc();
 </script>
 </body>
 </html>
