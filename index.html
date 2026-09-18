@@ -800,15 +800,20 @@ Object.keys(serviceMap).forEach(function(menuId) {
                 return;
             }
 
-          if (serviceCode === "fb_follow") {
-    window.location.href =
-        "dat-don-facebook-follow-profile-page-final.html";
+       if (serviceCode === "fb_follow") {
+  window.location.href =
+    "dat-don-facebook-follow-profile-page-final.html";
+
+} else if (serviceCode === "fb_like_page_follow") {
+  window.location.href =
+    "dat-don-facebook-like-page-follow-final.html";
+
 } else {
-    window.location.href =
-        "dat-don.html?platform=" +
-        encodeURIComponent(platformName) +
-        "&service=" +
-        encodeURIComponent(serviceCode);
+  window.location.href =
+    "dat-don.html?platform=" +
+    encodeURIComponent(platformName) +
+    "&service=" +
+    encodeURIComponent(serviceCode);
 }
         });
 
