@@ -1,1 +1,97 @@
+from pathlib import Path
 
+html = """<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tăng thành viên nhóm - LOC STAR</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f7f7fb;color:#222}
+.top{height:64px;background:#fff;border-bottom:1px solid #eee;display:flex;align-items:center;gap:20px;padding:0 28px}
+.logo{font-size:24px;font-weight:800;color:#30265b}.search{width:280px;padding:10px;border:1px solid #ddd;border-radius:7px}.support{margin-left:auto;background:#25c878;color:white;border:0;border-radius:6px;padding:10px 16px;font-weight:bold}
+.wrap{display:flex;min-height:calc(100vh - 64px)}.side{width:250px;background:#30265b;color:white;padding:20px 0}.st{font-size:12px;color:#bdb4e8;padding:10px 22px}.si{display:block;color:#eee;text-decoration:none;padding:12px 22px;font-size:14px}.si.active{background:#ffffff14;font-weight:bold}
+.main{flex:1;padding:30px;max-width:1050px}.crumb{color:#777;font-size:14px;margin-bottom:24px}h1{font-size:20px;margin-bottom:22px}
+.card{background:#fff;border-radius:10px;padding:22px;box-shadow:0 4px 18px #0000000d}.tabs{display:flex;border-bottom:1px solid #ddd;margin-bottom:20px}.tab{padding:12px 18px;text-decoration:none;color:#333;font-size:14px}.activeTab{border:1px solid #ddd;border-bottom:2px solid white;border-radius:6px 6px 0 0;color:#5049dc;font-weight:bold}
+.box{background:#fafbff;padding:20px;border-radius:8px}.title{font-size:17px;font-weight:bold;margin-bottom:15px}
+.service{display:flex;gap:12px;padding:11px 0;cursor:pointer}.service input{margin-top:4px}.stext{font-size:15px;line-height:1.5}.code{font-weight:bold;margin-right:8px}.name{color:#514bdd;font-weight:bold}.price{background:#5954e8;color:#fff;border-radius:7px;padding:2px 8px;font-size:12px;font-weight:bold;margin-left:7px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}label{display:block;font-weight:bold;font-size:14px;margin-bottom:8px}input[type=text],input[type=number],textarea{width:100%;padding:12px;border:1px solid #d9dce5;border-radius:6px;font-size:14px}textarea{height:90px;resize:vertical}
+.total{display:flex;align-items:center;gap:14px;margin-top:18px}.tl{font-weight:bold;min-width:130px}.tb{flex:1;border:1px solid #d9dce5;border-radius:6px;padding:14px;background:#fff;font-weight:bold}.unit{border:1px solid #d9dce5;border-radius:6px;padding:14px;min-width:105px;text-align:center}
+.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}.btn{border:0;border-radius:6px;padding:12px 20px;font-weight:bold;cursor:pointer}.back{background:#eee}.order{background:#5049dc;color:#fff}
+#msg{display:none;margin-top:14px;padding:12px;border-radius:6px;font-size:14px}.ok{display:block!important;background:#eaf9f0;color:#19703a}.err{display:block!important;background:#fff0f0;color:#a32626}
+.note{margin-top:16px;color:#777;font-size:13px;line-height:1.6}
+@media(max-width:800px){.side{display:none}.main{padding:18px}.grid{grid-template-columns:1fr}.search{width:160px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="logo">LOC STAR</div><input class="search" placeholder="Tìm dịch vụ"><button class="support">+ Hỗ trợ</button></header>
+<div class="wrap">
+<aside class="side">
+<div class="st">MENU CHÍNH</div><a class="si" href="index.html">⚙ Chức năng</a>
+<div class="st">NỀN TẢNG</div>
+<a class="si" href="dat-don.html?platform=Facebook&service=fb_like">Tăng like bài viết</a>
+<a class="si" href="dat-don-facebook-follow-profile-page-final.html">Tăng follow Profile & Page</a>
+<a class="si" href="dat-don-facebook-like-page-follow-final.html">Tăng Like Page & Follow page</a>
+<a class="si active" href="dat-don-facebook-member-group.html">Tăng thành viên nhóm</a>
+<a class="si" href="index.html">Tăng bình luận</a><a class="si" href="index.html">Tăng view video</a>
+</aside>
+<main class="main">
+<div class="crumb">Trang chủ　›　Tăng thành viên nhóm</div>
+<h1>TĂNG THÀNH VIÊN NHÓM</h1>
+<div class="card">
+<div class="tabs"><div class="tab activeTab">Đặt đơn</div><a class="tab" href="don-hang.html">Lịch sử đơn hàng</a><a class="tab" href="don-hang.html">Đặt nhiều đơn</a><a class="tab" href="don-hang.html">Đơn chờ chạy</a></div>
+<div class="box">
+<div class="title">▣ Máy chủ</div>
+
+<label class="service"><input type="radio" name="svc" value="6451" data-p="6.91" data-max="40000"><span class="stext"><span class="code">MC 6451</span><span class="name">S2 mem clone | Không bảo hành | max 40k | tốc độ cực nhanh | Không đẻ đơn</span><span class="price">6.91 VND</span></span></label>
+<label class="service"><input type="radio" name="svc" value="6534" data-p="20" data-max="40000"><span class="stext"><span class="code">MC 6534</span><span class="name">Mem vip nhanh | Việt</span><span class="price">20 VND</span></span></label>
+<label class="service"><input type="radio" name="svc" value="6626" data-p="16.26" data-max="40000"><span class="stext"><span class="code">MC 6626</span><span class="name">Facebook mem clone tây + vn (chia nhỏ đơn để chạy) Không đẻ đơn</span><span class="price">16.26 VND</span></span></label>
+<label class="service"><input type="radio" name="svc" value="6627" data-p="11.12" data-max="40000"><span class="stext"><span class="code">MC 6627</span><span class="name">Mem clone tây + vn | Không bảo hành | Không đẻ đơn</span><span class="price">11.12 VND</span></span></label>
+
+<div class="grid">
+<div><label>🔗 Liên kết mua hàng</label><input id="link" type="text" placeholder="Nhập link nhóm Facebook"></div>
+<div><label>Số lượng</label><input id="qty" type="number" value="1000" min="1"></div>
+</div>
+<div class="total"><div class="tl">Tổng thanh toán</div><div class="tb" id="total">0 VND</div><div class="unit" id="unit">0đ / 1k</div></div>
+<div style="margin-top:18px"><label>Ghi chú đơn hàng</label><textarea id="note" placeholder="Nhập ghi chú (nếu có)"></textarea></div>
+<div class="actions"><button class="btn back" onclick="location.href='index.html'">Quay lại</button><button class="btn order" id="btn" onclick="order()">Đặt đơn</button></div>
+<div id="msg"></div>
+<div class="note">Link hợp lệ: Link nhóm Facebook. Giá hiển thị là giá bán theo 1.000 thành viên. Tốc độ, bảo hành và giới hạn thực tế phụ thuộc máy chủ nhà cung cấp.</div>
+</div></div></main></div>
+
+<script>
+const API="https://locstar-shop-api.onrender.com";
+const money=n=>Number(n||0).toLocaleString("vi-VN",{maximumFractionDigits:2})+" VND";
+const token=()=>localStorage.getItem("authToken")||"";
+function calc(){
+ const s=document.querySelector('input[name="svc"]:checked'),q=Number(document.getElementById("qty").value)||0;
+ if(!s){total.textContent="0 VND";unit.textContent="0đ / 1k";return}
+ const p=Number(s.dataset.p)||0; total.textContent=money(p*q/1000); unit.textContent=p.toLocaleString("vi-VN",{maximumFractionDigits:2})+"đ / 1k";
+}
+document.querySelectorAll('input[name="svc"]').forEach(x=>x.onchange=calc);document.getElementById("qty").oninput=calc;calc();
+
+async function order(){
+ const msg=document.getElementById("msg"),s=document.querySelector('input[name="svc"]:checked'),link=document.getElementById("link").value.trim(),q=Number(document.getElementById("qty").value)||0;
+ msg.className="";msg.style.display="none";
+ if(!token()){location.href="login.html";return}
+ if(!s){msg.className="err";msg.textContent="Vui lòng chọn máy chủ.";return}
+ if(!link){msg.className="err";msg.textContent="Vui lòng nhập link nhóm Facebook.";return}
+ if(q<1||q>Number(s.dataset.max)){msg.className="err";msg.textContent="Số lượng tối đa của máy chủ này là "+Number(s.dataset.max).toLocaleString("vi-VN")+".";return}
+ const p=Number(s.dataset.p)||0;
+ if(!confirm("Xác nhận đặt đơn?\\n\\nSố lượng: "+q.toLocaleString("vi-VN")+"\\nTổng tiền: "+money(p*q/1000)))return;
+ const b=document.getElementById("btn");b.disabled=true;b.textContent="Đang gửi đơn...";
+ try{
+  const r=await fetch(API+"/api/orders",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+token()},body:JSON.stringify({serviceId:s.value,link,quantity:q,note:document.getElementById("note").value.trim()})});
+  const d=await r.json().catch(()=>({}));if(!r.ok||!d.success)throw new Error(d.message||"Đặt đơn thất bại");
+  msg.className="ok";msg.textContent="Đặt đơn thành công. Mã đơn LOC STAR: "+(d.orderId||"");
+  document.getElementById("link").value="";document.getElementById("note").value="";
+ }catch(e){msg.className="err";msg.textContent=e.message}
+ finally{b.disabled=false;b.textContent="Đặt đơn"}
+}
+</script>
+</body>
+</html>"""
+
+path = Path("/mnt/data/dat-don-facebook-member-group.html")
+path.write_text(html, encoding="utf-8")
+print(path)
