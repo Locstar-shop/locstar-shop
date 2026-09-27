@@ -808,19 +808,28 @@ Object.keys(serviceMap).forEach(function(menuId) {
                 return;
             }
 
-   Tăng Follow Profile & Page
-→ dat-don-facebook-follow-profile-page-final.html
+ if (serviceCode === "fb_follow") {
 
-Tăng Like Page & Follow Page
-→ dat-don-facebook-like-page-follow-final.html
+    window.location.href =
+        "dat-don-facebook-follow-profile-page-final.html";
 
-Tăng thành viên nhóm
-→ dat-don-facebook-member-group.html
-  window.location.href =
-    "dat-don.html?platform=" +
-    encodeURIComponent(platformName) +
-    "&service=" +
-    encodeURIComponent(serviceCode);
+} else if (serviceCode === "fb_page_like") {
+
+    window.location.href =
+        "dat-don-facebook-like-page-follow-final.html";
+
+} else if (serviceCode === "fb_group") {
+
+    window.location.href =
+        "dat-don-facebook-member-group.html";
+
+} else {
+
+    window.location.href =
+        "dat-don.html?platform=" +
+        encodeURIComponent(platformName) +
+        "&service=" +
+        encodeURIComponent(serviceCode);
 }
         });
 
